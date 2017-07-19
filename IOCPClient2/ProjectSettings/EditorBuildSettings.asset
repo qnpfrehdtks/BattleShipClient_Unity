@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1045 &1
+EditorBuildSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Scenes:
+  - enabled: 1
+    path: Assets/05_Scene/Main.unity
+    guid: 34ca04808223be64693c542efa32724d
+  - enabled: 1
+    path: Assets/05_Scene/BattleRoom.unity
+    guid: f1d042c62f2a0d04aa0dd9ed1b8c6083
+  - enabled: 1
+    path: Assets/05_Scene/ReadyRoom.unity
+    guid: e9aa5b99e53a63c4781c0bc4270a4306
+  - enabled: 1
+    path: Assets/05_Scene/WaitingRoom.unity
+    guid: b96c186b77583fc44914e41423885203

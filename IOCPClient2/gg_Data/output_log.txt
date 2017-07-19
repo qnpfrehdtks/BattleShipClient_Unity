@@ -1,0 +1,157 @@
+Initialize engine version: 5.6.2p1 (8a29de46e0a0)
+GfxDevice: creating device client; threaded=1
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.1]
+    Renderer: Intel(R) HD Graphics 5500 (ID=0x1616)
+    Vendor:   Intel
+    VRAM:     2111 MB
+    Driver:   20.19.15.4549
+Begin MonoManager ReloadAssembly
+Platform assembly: C:\Users\PARK\Documents\IOCPClient2\gg_Data\Managed\UnityEngine.dll (this message is harmless)
+Loading C:\Users\PARK\Documents\IOCPClient2\gg_Data\Managed\UnityEngine.dll into Unity Child Domain
+Platform assembly: C:\Users\PARK\Documents\IOCPClient2\gg_Data\Managed\Assembly-CSharp.dll (this message is harmless)
+Loading C:\Users\PARK\Documents\IOCPClient2\gg_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
+Platform assembly: C:\Users\PARK\Documents\IOCPClient2\gg_Data\Managed\UnityEngine.UI.dll (this message is harmless)
+Loading C:\Users\PARK\Documents\IOCPClient2\gg_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
+Platform assembly: C:\Users\PARK\Documents\IOCPClient2\gg_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
+Loading C:\Users\PARK\Documents\IOCPClient2\gg_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
+Platform assembly: C:\Users\PARK\Documents\IOCPClient2\gg_Data\Managed\UnityEngine.Analytics.dll (this message is harmless)
+Loading C:\Users\PARK\Documents\IOCPClient2\gg_Data\Managed\UnityEngine.Analytics.dll into Unity Child Domain
+- Completed reload, in  0.031 seconds
+Platform assembly: C:\Users\PARK\Documents\IOCPClient2\gg_Data\Managed\System.Core.dll (this message is harmless)
+Platform assembly: C:\Users\PARK\Documents\IOCPClient2\gg_Data\Managed\System.dll (this message is harmless)
+desktop: 1920x1080 60Hz; virtual: 1920x1080 at 0,0
+<RI> Initializing input.
+<RI> Input initialized.
+<RI> Initialized touch support.
+UnloadTime: 4.241293 ms
+CLcick
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+The referenced script on this Behaviour (Game Object 'Anchor') is missing!
+ 
+(Filename:  Line: 1743)
+
+Unloading 4 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 11.479786 ms
+Wait Scene Ctrl switch Enter
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+Connect Succ
+
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+서버가 받기 까지 대기... Blocking
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+ 보낸 데이더 양 12
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+ 받은 데이더 양 12
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+12
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+334
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+Wait for Enemey Player...
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+Player Add and Player Enter Send Succ
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+
+Unloading 28 unused Assets to reduce memory usage. Loaded Objects now: 336.
+Total: 0.522994 ms (FindLiveObjects: 0.033095 ms CreateObjectMapping: 0.028899 ms MarkObjects: 0.268023 ms  DeleteObjects: 0.192976 ms)
+
+서버가 받기 까지 대기... Blocking
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+ 보낸 데이더 양 12
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+ 받은 데이더 양 12
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+12
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+334
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+Wait for Enemey Player...
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+서버가 받기 까지 대기... Blocking
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+ 보낸 데이더 양 12
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+ 받은 데이더 양 36
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+36
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+337
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+445Enemy Come Here Fight!!!
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+ Enemy Player Add and Player Enter Send Succ
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+Unloading 1 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 3.130978 ms
+Wait Scene Ctrl switch Enter
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+Connect Succ
+
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+Unable to connect to remote end point!
+
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+ Enemy Player Add and Player Enter Send Succ
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+
+Unloading 7 unused Assets to reduce memory usage. Loaded Objects now: 334.
+Total: 1.003572 ms (FindLiveObjects: 0.092293 ms CreateObjectMapping: 0.119328 ms MarkObjects: 0.721565 ms  DeleteObjects: 0.069919 ms)
+
+Setting up 2 worker threads for Enlighten.
+  Thread -> id: 3588 -> priority: 1 
+  Thread -> id: 1678 -> priority: 1 
