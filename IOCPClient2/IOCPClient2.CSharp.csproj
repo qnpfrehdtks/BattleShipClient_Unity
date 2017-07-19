@@ -101,6 +101,7 @@
     <Compile Include="Assets\01_Script\PlayerObject.cs" />
     <Compile Include="Assets\01_Script\SceneCtrl.cs" />
     <Compile Include="Assets\01_Script\Ship\Base_Ship.cs" />
+    <Compile Include="Assets\01_Script\Ship\Missile.cs" />
     <Compile Include="Assets\01_Script\Singleton_Manager.cs" />
     <Compile Include="Assets\01_Script\UI\ReadyChest.cs" />
     <Compile Include="Assets\01_Script\UI\SelectButtonBehave.cs" />
