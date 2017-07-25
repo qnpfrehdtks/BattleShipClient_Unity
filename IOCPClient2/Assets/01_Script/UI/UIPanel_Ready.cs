@@ -27,8 +27,8 @@ public class UIPanel_Ready : SingletonUIPanel<UIPanel_Ready>
     // 왼쪽 배 건설 버튼 모은 리스트
     public List<ShipSelectButton> m_ButtonList;
 
-   // 설치된 배의 리스트, 이 리스트를 전투 씬에서 넘겨받아서 전투해야한다~
-    public Dictionary<SHIP,Base_Ship> m_InstalledShipMap;
+   //// 설치된 배의 리스트, 이 리스트를 전투 씬에서 넘겨받아서 전투해야한다~
+   // public Dictionary<SHIP,Base_Ship> m_InstalledShipMap;
 
     // 현재 선택한 배를 담은 오브젝트 변수
     private GameObject m_TempShip;
@@ -42,7 +42,7 @@ public class UIPanel_Ready : SingletonUIPanel<UIPanel_Ready>
 
       //  m_ShipList = new List<Base_Ship>();
         m_ChestList = new List<GameObject>();
-        m_InstalledShipMap = new Dictionary<SHIP, Base_Ship>();
+    //    m_InstalledShipMap = new Dictionary<SHIP, Base_Ship>();
 
         for (int i=0; i < 10; i++)
         {
@@ -91,11 +91,12 @@ public class UIPanel_Ready : SingletonUIPanel<UIPanel_Ready>
                 return;
             }
 
-            // 만약 설치된 배 목록 이었다면 설치된 배 목록에서 우선 지워야 함.
-            if(m_InstalledShipMap.ContainsKey(shipinfo.m_shipKind))
-            {
-                m_InstalledShipMap.Remove(shipinfo.m_shipKind);
-            }
+            PlayerManager.Instance.DeleteShipFromPlayer(shipinfo, true);
+            //// 만약 설치된 배 목록 이었다면 설치된 배 목록에서 우선 지워야 함.
+            //if(m_InstalledShipMap.ContainsKey(shipinfo.m_shipKind))
+            //{
+            //    m_InstalledShipMap.Remove(shipinfo.m_shipKind);
+            //}
 
             m_isSelected = true;
             m_TempShip = ship;
@@ -159,8 +160,7 @@ public class UIPanel_Ready : SingletonUIPanel<UIPanel_Ready>
                 m_TempSelectButton.InstalledButton();
 
                 // 만약 딕셔너리에 추가되지 않았다면 배를 설치햇다고 추가시키자~
-                if(!m_InstalledShipMap.ContainsKey(ship.m_shipKind))
-                m_InstalledShipMap.Add(ship.m_shipKind,ship);
+                PlayerManager.Instance.AddShipToPlayer(ship, true);
 
                 m_TempShip = null;
                 m_TempSelectButton = null;
@@ -178,10 +178,10 @@ public class UIPanel_Ready : SingletonUIPanel<UIPanel_Ready>
 
     public void ClickGameStartButton()
     {
-        Debug.Log(m_InstalledShipMap.Count);
+        Debug.Log(PlayerManager.Instance.CheckDispatchedShipCount(true));
         ShipCall(null, null);
 
-        if (m_InstalledShipMap.Count >= 5)
+        if (PlayerManager.Instance.CheckDispatchedShipCount(true) >= 5)
         {
             gameSceneManager.Instance.SceneChange(SCENE.SC_BATTLE);
         }

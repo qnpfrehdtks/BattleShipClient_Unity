@@ -14,68 +14,60 @@ public class Player : MonoBehaviour  {
 
     public int m_Id {get; private set; }
     public int m_EnemyId { get; set; }
-    private List<Base_Ship> m_ShipList;
+    public Dictionary<SHIP, Base_Ship> m_InstalledShipMap;
 
 
-  //  private List<PlayerObject> m_PlayerObjList;
+    //  private List<PlayerObject> m_PlayerObjList;
 
 
 
     public Player(int ID)
     {
+        m_InstalledShipMap = new Dictionary<SHIP, Base_Ship>();
         m_Id = ID;
     }
 
 
-    public void Wirte(OutputStream stream)
+    public void AddShip(Base_Ship ship)
     {
-        stream.Serialize(BitConverter.GetBytes(sizeof(float) * 4), sizeof(int));
+        if(m_InstalledShipMap.ContainsKey(ship.m_shipKind))
+        {
+            Debug.Log(ship.m_shipKind.ToString() + " already have a Ship in a Dic ");
+            return;
+        }
+        else
+        {
+            Debug.Log(ship.m_shipKind.ToString() + " Add Complete!!! ");
+            m_InstalledShipMap.Add(ship.m_shipKind, ship);
+        }
+    }
 
-        //stream.Serialize(BitConverter.GetBytes(m_tr.position.x), sizeof(float));
-        //stream.Serialize(BitConverter.GetBytes(m_tr.position.y), sizeof(float));
-        //stream.Serialize(BitConverter.GetBytes(m_tr.position.z), sizeof(float));
-
-        //stream.Serialize(BitConverter.GetBytes(m_Qut.x), sizeof(float));
-        //stream.Serialize(BitConverter.GetBytes(m_Qut.y), sizeof(float));
-        //stream.Serialize(BitConverter.GetBytes(m_Qut.z), sizeof(float));
-        //stream.Serialize(BitConverter.GetBytes(m_Qut.w), sizeof(float));
-
-        //stream.Wirte((UInt32)header.PkProtocol);
-
-        //stream.Wirte((UInt32)header.PkSize);
-
-        //byte[] Data = Encoding.Default.GetBytes(m_Data);
-        //stream.Wirte(Data);
+    public void DeleteShip(SHIP ship)
+    {
+        if (m_InstalledShipMap.ContainsKey(ship))
+        {
+            m_InstalledShipMap.Remove(ship);
+            Debug.Log(ship.ToString() + " Delete Complete ");
+        }
+        else
+        {
+            Debug.Log(ship.ToString() + " not have in Dictionary ");
+        }
     }
 
 
-    public void Read(InputStream stream)
+    public int ShipCount()
     {
-
-        ////byte[] m1 =  stream.Read(Marshal.SizeOf(header.Pkid));
-        ////header.Pkid =  BitConverter.ToInt32(m1, 0);
-
-        byte[] m1 = new byte[sizeof(float)];
-        stream.Serialize(m1, sizeof(float));
-        Debug.Log(BitConverter.ToSingle(m1, 0));
-
-        m1 = new byte[sizeof(float)];
-        stream.Serialize(m1, sizeof(float));
-        Debug.Log(BitConverter.ToSingle(m1, 0));
-
-
-        m1 = new byte[sizeof(float)];
-        stream.Serialize(m1, sizeof(float));
-        Debug.Log(BitConverter.ToSingle(m1, 0));
-
-
-
-
-        //stream.Wirte((UInt32)header.PkProtocol);
-
-        //stream.Wirte((UInt32)header.PkSize);
-
-        //byte[] Data = Encoding.Default.GetBytes(m_Data);
-        //stream.Wirte(Data);
+        if (m_InstalledShipMap != null)
+        {
+            return m_InstalledShipMap.Count;
+        }
+        else
+        {
+            Debug.Log(" need a alloc a Memory Map");
+            return -1;
+        }
     }
+
+
 }

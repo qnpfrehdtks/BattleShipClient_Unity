@@ -88,6 +88,57 @@ public class PlayerManager : Singleton_Manager<PlayerManager>
         m_PlayerTable.Add(player.m_Id, player);
     }
 
+    public void AddShipToPlayer(Base_Ship ship, bool isCurPlayer)
+    {
+        int playerID;
+
+        if (isCurPlayer)
+        {
+            playerID = m_PlayerID;
+        }
+        else playerID = m_PlayerEnemyID;
+
+        if (playerID != -1)
+        {
+            m_PlayerTable[playerID].AddShip(ship);
+         }
+        else
+        {
+            Debug.Log("Um Not have a PlayerID....");
+        }
+    }
+
+    public void DeleteShipFromPlayer(Base_Ship ship, bool isCurPlayer)
+    {
+
+        int playerID;
+
+        if (isCurPlayer)
+        {
+            playerID = m_PlayerID;
+        }
+        else playerID = m_PlayerEnemyID;
+
+        if (playerID != -1)
+        {
+            m_PlayerTable[playerID].DeleteShip(ship.m_shipKind);
+        }
+        else
+        {
+            Debug.Log("Not have a PlayerID....");
+        }
+    }
+
+
+    public int CheckDispatchedShipCount(bool isCurPlayer)
+    {
+        if (isCurPlayer)
+            return m_PlayerTable[m_PlayerID].ShipCount();
+        else return m_PlayerTable[m_PlayerEnemyID].ShipCount();
+    }
+
+
+
     public Player getCurPlayer()
     {
         return m_PlayerTable[m_PlayerID];
