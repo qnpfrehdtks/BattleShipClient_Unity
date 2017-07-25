@@ -4,32 +4,25 @@ using UnityEngine;
 
 public class ReadyChest : MonoBehaviour {
 
-    private 
-
-
+    private SpriteRenderer m_Renderer;
+    private Color m_OriginColor;
 
 	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+	void Awake () {
+        m_Renderer = GetComponent<SpriteRenderer>();
+        m_OriginColor = m_Renderer.color;
+    }
+
+    void Update()
+    {
+
+
+    }
 
     void OnMouseUp()
     {
-        Debug.Log("Up");
+        UIPanel_Ready.instance.installShip();
     }
 
-    void OnMouseDrag()
-    {
-        Debug.Log("Drag");
-    }
 
-    void OnMouseDown()
-    {
-        Debug.Log("Down");
-    }
 }

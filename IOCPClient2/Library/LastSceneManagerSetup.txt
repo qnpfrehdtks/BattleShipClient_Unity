@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/05_Scene/ReadyRoom.unity
+- path: Assets/05_Scene/Main.unity
   isLoaded: 1
   isActive: 1

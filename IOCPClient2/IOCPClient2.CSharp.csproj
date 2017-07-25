@@ -86,27 +86,28 @@
   <ItemGroup>
     <Compile Include="Assets\01_Script\CameraFadeInOut.cs" />
     <Compile Include="Assets\01_Script\FactoryInterface.cs" />
-    <Compile Include="Assets\01_Script\IOCPTest.cs" />
-    <Compile Include="Assets\01_Script\InputState.cs" />
+    <Compile Include="Assets\01_Script\Manger\BattleManager.cs" />
     <Compile Include="Assets\01_Script\Manger\GameManager.cs" />
     <Compile Include="Assets\01_Script\Manger\LoginManager.cs" />
     <Compile Include="Assets\01_Script\Manger\NetworkManager.cs" />
     <Compile Include="Assets\01_Script\Manger\PlayerManager.cs" />
+    <Compile Include="Assets\01_Script\Manger\Singleton_Manager.cs" />
     <Compile Include="Assets\01_Script\Manger\SoundManager.cs" />
     <Compile Include="Assets\01_Script\Manger\UIManager.cs" />
     <Compile Include="Assets\01_Script\Manger\gameSceneManager.cs" />
-    <Compile Include="Assets\01_Script\Packet.cs" />
-    <Compile Include="Assets\01_Script\PacketFactory.cs" />
+    <Compile Include="Assets\01_Script\Network\IOCPTest.cs" />
+    <Compile Include="Assets\01_Script\Network\Packet.cs" />
     <Compile Include="Assets\01_Script\Player.cs" />
-    <Compile Include="Assets\01_Script\PlayerObject.cs" />
-    <Compile Include="Assets\01_Script\SceneCtrl.cs" />
+    <Compile Include="Assets\01_Script\SceneControll\SceneCtrl.cs" />
     <Compile Include="Assets\01_Script\Ship\Base_Ship.cs" />
     <Compile Include="Assets\01_Script\Ship\Missile.cs" />
-    <Compile Include="Assets\01_Script\Singleton_Manager.cs" />
+    <Compile Include="Assets\01_Script\UI\InstallIconButton.cs" />
     <Compile Include="Assets\01_Script\UI\ReadyChest.cs" />
-    <Compile Include="Assets\01_Script\UI\SelectButtonBehave.cs" />
+    <Compile Include="Assets\01_Script\UI\Ready_BackToReady.cs" />
+    <Compile Include="Assets\01_Script\UI\ShipChest.cs" />
     <Compile Include="Assets\01_Script\UI\ShipSelectButton.cs" />
     <Compile Include="Assets\01_Script\UI\UIPanel_Base.cs" />
+    <Compile Include="Assets\01_Script\UI\UIPanel_Battle.cs" />
     <Compile Include="Assets\01_Script\UI\UIPanel_Main.cs" />
     <Compile Include="Assets\01_Script\UI\UIPanel_Ready.cs" />
     <Compile Include="Assets\01_Script\UI\UIPanel_Wait.cs" />
@@ -123,7 +124,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\01_Script\Shader\NewSurfaceShader.shader" />
-    <None Include="Assets\03_Fonts\Bowlby_One\OFL.txt" />
+    <None Include="Assets\04_Image\03_Fonts\Bowlby_One\OFL.txt" />
     <None Include="Assets\Plugins\Pixelplacement\iTween\ReadMe!\ReadMe!.txt" />
     <None Include="Assets\Standard Assets\CrossPlatformInput\CrossPlatformInputGuidelines.txt" />
   </ItemGroup>

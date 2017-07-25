@@ -37,8 +37,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1397864550984682}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.49486485, y: 1.48, z: -0.6533769}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 5, y: 5, z: 5}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -61,7 +61,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00ed355ebf56f7d4cb30afa41ededd88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  height: 0.5
+  height: 1
   time: 2
 --- !u!137 &137681355039093678
 SkinnedMeshRenderer:
@@ -104,8 +104,8 @@ SkinnedMeshRenderer:
   m_BlendShapeWeights: []
   m_RootBone: {fileID: 0}
   m_AABB:
-    m_Center: {x: 0.00000008940697, y: 0, z: -0.00000017881393}
-    m_Extent: {x: 5, y: 0, z: 5}
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 5, y: 1.110223e-16, z: 5}
   m_DirtyAABB: 0
 --- !u!183 &183150596090225022
 Cloth:
@@ -114,7 +114,7 @@ Cloth:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1397864550984682}
   m_Enabled: 1
-  m_StretchingStiffness: 0.1
+  m_StretchingStiffness: 0.5
   m_BendingStiffness: 0
   m_UseTethers: 1
   m_UseGravity: 0
@@ -128,7 +128,7 @@ Cloth:
   m_UseContinuousCollision: 1
   m_UseVirtualParticles: 1
   m_SolverFrequency: 120
-  m_SleepThreshold: 0.1
+  m_SleepThreshold: 0.5
   m_Coefficients:
   - maxDistance: 0.2
     collisionSphereDistance: 3.4028235e+38

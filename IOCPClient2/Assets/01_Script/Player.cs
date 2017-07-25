@@ -10,10 +10,14 @@ using System.IO;
 using System;
 using System.Runtime.InteropServices;
 
-public class Player  {
+public class Player : MonoBehaviour  {
 
     public int m_Id {get; private set; }
-    private List<PlayerObject> m_PlayerObjList;
+    public int m_EnemyId { get; set; }
+    private List<Base_Ship> m_ShipList;
+
+
+  //  private List<PlayerObject> m_PlayerObjList;
 
 
 

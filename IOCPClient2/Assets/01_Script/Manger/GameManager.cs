@@ -7,6 +7,8 @@ public class GameManager : MonoBehaviour {
 	// Use this for initialization
 	public void Awake () {
 
+
+        Screen.SetResolution(1280, 720, false);
         this.gameObject.name = "[System]GameManager";
         DontDestroyOnLoad(this.gameObject);
 

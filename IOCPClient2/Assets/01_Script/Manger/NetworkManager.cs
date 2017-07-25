@@ -17,6 +17,8 @@ public enum PACKETSTATE
     PK_PLAYER_WAIT,        // 플레이어 보고 기다려라 라고 패킷을 보낼 경우
     PK_PLAYER_WAITCOMPLETE_ACK,  // 플레이어가 드디더 상대방과 매칭을 마폈을 경우 보내는 경우 ACK임.
     PK_PLAYER_ENEMYENTER_WAIT,
+    PK_PLAYER_READY,    // 배치 완료.
+    PK_ENEMY_READY,
     PK_ENEMY_ENTER,   // 플레이어가 적을 만날 경우
     PK_PLAYEROBJ_FIRE,   // 플레이어가 목표물을 향해 사격한 경우
     PK_PLAYEROBJ_DAMAGED,   // 데미지 받았다고 패킷 보낼때
@@ -27,90 +29,132 @@ public enum PACKETSTATE
 }
 public class NetworkManager : Singleton_Manager<NetworkManager>
 {
-
+    private           bool                              m_isCanFight;
     private           byte[]                            m_tempBuffer;
     private           Socket                            m_sck;
-    private           OutputStream                      m_outputStream;
-    private           InputStream                       m_inputStream;
+
     private           Serilaizer                        m_se;
     private           IPEndPoint                        m_localEndPoint;
     private           Dictionary<int, Player>           m_Player;
-    private           bool                              m_isOnServer;
+    public bool       m_isConnectServer { get; private set; }
 
 
     protected override bool Init()
     {
         m_tempBuffer = new byte[90];
         m_Player = new Dictionary<int, Player>();
-        m_isOnServer = true;
-        m_outputStream = new OutputStream(3000);
-        m_inputStream = new InputStream(3000);
+        m_isConnectServer = false;
 
-        m_se = new Serilaizer();
+        m_se = new Serilaizer(3000,3000);
         m_sck = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         m_localEndPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 5001);
 
         return true;
     }
 
+    // 서버에게 지속적으로 패킷을 보내는 함수임. 코루틴을 써서 매 간격 보낸다.
     IEnumerator whileSendPacket(PACKETSTATE state)
     {
         bool isMatchingComplete = false;
+        PacketHeader p;
 
         while (!isMatchingComplete)
         {
             switch (state)
             {
+                // 적 플레이어와 매칭이 됬네요...
                 case PACKETSTATE.PK_PLAYER_ENTER:
-
-                    m_outputStream.Serialize(4 * 3);
-                    m_outputStream.Serialize((int)PACKETSTATE.PK_PLAYER_ENTER);
-                    m_outputStream.Serialize(PlayerManager.Instance.m_PlayerID);
-
+                    //우선 서버에게 보낼 패킷 정보를 담자.
+                    createPacketFrame(4 * 3, PACKETSTATE.PK_PLAYER_ENTER, PlayerManager.Instance.m_PlayerID);
+                    //보낸다 요청을 서버에게
                     sendToServer();
-
+                    //받는다 서버의 응답을
                     recvedFromServer();
 
-                    // 패킷의 사이즈
-                    byte[] bytes = new byte[sizeof(int)];
-                    m_inputStream.Serialize(bytes, sizeof(int));
-                    int PacketSize = BitConverter.ToInt32(bytes, 0);
-                    Debug.Log(PacketSize);
+                    //서버에게 받은 패킷을 Deserialize하여 무슨 패킷인지 알아낸다.
+                   p = classifyPacket();
 
-                    // 패킷의 Key
-                    bytes = new byte[sizeof(int)];
-                    m_inputStream.Serialize(bytes, sizeof(int));
-                    int PacketKey = BitConverter.ToInt32(bytes, 0);
-                    Debug.Log(PacketKey);
-
-              
                     // 서버로 부터 WAIT란 패킷을 받았을 때
-                    if ((PACKETSTATE)PacketKey == PACKETSTATE.PK_PLAYER_WAIT)
+                    if (p.PkKey == PACKETSTATE.PK_PLAYER_WAIT)
                     {
                         Debug.Log("Wait for Enemey Player...");
-                        m_outputStream.resetStream();
-                        m_inputStream.resetStream();
+                        m_se.resetIOStream();
 
+                        //1초 간격으로 보냄, Matching 될때까지
                         yield return new WaitForSeconds(1.0f);
                     }
                     // 서버로 부터 적이 들어왔다는 패킷을 받았을때
-                    else if ((PACKETSTATE)PacketKey == PACKETSTATE.PK_ENEMY_ENTER)
+                    else if (p.PkKey == PACKETSTATE.PK_ENEMY_ENTER)
                     {
                         // 상대 방 적 정보가 무엇인지.
-                        bytes = new byte[sizeof(int)];
-                        m_inputStream.Serialize(bytes, sizeof(int));
-                        int EnemyPlayerID = BitConverter.ToInt32(bytes, 0);
+                        int EnemyPlayerID =  BitConverter.ToInt32(m_se.inSerialize(typeof(int)), 0);
                         Debug.Log(EnemyPlayerID + "Enemy Come Here Fight!!!");
 
+                        //매칭 완료
                         isMatchingComplete = true;
+                        // 적 플레이어 만든다.
                        PlayerManager.Instance.CreatePlayer(EnemyPlayerID);
-                      gameSceneManager.Instance.SceneChange(SCENE.SC_READY);
-
-
+                        //레디씬으로
+                       gameSceneManager.Instance.SceneChange(SCENE.SC_READY);
                         //  sendToServer();
 
                     }
                     break;
+
+                case PACKETSTATE.PK_PLAYER_READY:
+                    //우선 서버에게 보낼 패킷 정보를 담자.
+                    createPacketFrame(4 * 3, PACKETSTATE.PK_PLAYER_ENTER, PlayerManager.Instance.m_PlayerID);
+                    //보낸다 요청을 서버에게
+                    sendToServer();
+                    //받는다 서버의 응답을
+                    recvedFromServer();
+                    //서버에게 받은 패킷을 Deserialize하여 무슨 패킷인지 알아낸다.
+                    p = classifyPacket();
+
+
+                    // 서버로 부터 WAIT란 패킷을 받았을 때
+                    if (p.PkKey == PACKETSTATE.PK_PLAYER_WAIT)
+                    {
+                        Debug.Log("wait Ready for Enemey Player...");
+
+                        //버퍼 초기화~
+                        m_se.resetIOStream();
+
+                        //1초 간격으로 보냄, Matching 될때까지
+                        yield return new WaitForSeconds(1.0f);
+                    }
+                    // 서버로 부터 적이 들어왔다는 패킷을 받았을때
+                    else if (p.PkKey == PACKETSTATE.PK_ENEMY_READY)
+                    {
+                        
+                        int EnemyPlayerID = BitConverter.ToInt32(m_se.inSerialize(typeof(int)), 0);
+
+                        // 현재 대치중인 적이랑 서버에서 온 적이랑 아이디가 맞는지 체크,, 아니면 다시 패킷 받자.,
+                        if (PlayerManager.Instance.getCurPlayer().m_EnemyId != EnemyPlayerID )
+                        {
+                            Debug.Log("wait Ready for Enemey Player...");
+
+                            //버퍼 초기화~
+                            m_se.resetIOStream();
+
+                            //1초 간격으로 보냄, Matching 될때까지
+                            yield return new WaitForSeconds(1.0f);
+                        }
+
+                        Debug.Log(EnemyPlayerID + "Enemy Come Here Fight!!!");
+
+                        //매칭 완료
+                        m_isCanFight = true;
+                  
+                        //배틀씬으로
+                        gameSceneManager.Instance.SceneChange(SCENE.SC_BATTLE);
+                        //  sendToServer();
+
+                    }
+
+
+                    break;
+
             }
 
            // yield return new WaitForSeconds(1.0f);
@@ -119,22 +163,20 @@ public class NetworkManager : Singleton_Manager<NetworkManager>
 
     }
 
-
-
-
     public bool Connect()
     {
         try
         {
             Debug.Log("Connect Succ\r\n");
-            m_sck.Connect(m_localEndPoint);
+           m_sck.Connect(m_localEndPoint);
+            m_isConnectServer = true;
             return true;
         }
         catch
         {
             Debug.Log("Unable to connect to remote end point!\r\n");
         }
-
+        m_isConnectServer = false;
         return false;
     }
 
@@ -145,10 +187,8 @@ public class NetworkManager : Singleton_Manager<NetworkManager>
             case PACKETSTATE.PK_PLAYER_ENTER:
                 StartCoroutine(whileSendPacket(state));
                 break;
-            case PACKETSTATE.PK_PLAYER_WAIT:
-
-
-
+            case PACKETSTATE.PK_PLAYER_READY:
+                StartCoroutine(whileSendPacket(state));
 
                 break;
         }
@@ -156,23 +196,10 @@ public class NetworkManager : Singleton_Manager<NetworkManager>
 
     }
 
-   public void ResetOutStream()
-    {
-        m_outputStream.resetStream();
-    }
-
-    public void ResetInStream()
-    {
-        m_outputStream.resetStream();
-    }
-
-
-   
-
     // 서버에게 outStrem의 버퍼 내부 값을 보내자.
     public void  sendToServer()
     {
-        SendBuffer(m_outputStream.GetBuffer());
+        SendBuffer(m_se.GetOutBuffer());
     }
 
 
@@ -198,7 +225,7 @@ public class NetworkManager : Singleton_Manager<NetworkManager>
 
     public void recvedFromServer()
     {
-        RecvBuffer(m_inputStream.GetBuffer());
+        RecvBuffer(m_se.GetInBuffer());
     }
 
     private int RecvBuffer(byte[] buffer)
@@ -208,7 +235,7 @@ public class NetworkManager : Singleton_Manager<NetworkManager>
         {
             byte[] tempBuffer = new byte[3000];
             RecvedByte = m_sck.Receive(tempBuffer);
-            m_inputStream.SetBuffer(tempBuffer);
+            m_se.SetInBuffer(tempBuffer);
             Debug.Log(" 받은 데이더 양 " + RecvedByte);
         }
         catch (SocketException e)
@@ -231,32 +258,53 @@ public class NetworkManager : Singleton_Manager<NetworkManager>
         }
     }
 
-    public void SendToServerTest(int ID)
+
+    private void createPacketFrame(int Size, PACKETSTATE packetState, int PlayerID)
     {
-        if (m_Player.ContainsKey(ID))
-        {
-            m_Player[ID].Wirte(m_outputStream);
-            sendToServer();
-        }
-        else
-        {
-            Debug.Log("I can't Find a Player Key");
-        }
+        m_se.outSerialize(Size);
+        m_se.outSerialize(packetState);
+        m_se.outSerialize(PlayerID);
+    }
+
+    private PacketHeader classifyPacket()
+    {
+        PacketHeader p;
+        p.PkSize = BitConverter.ToInt32(m_se.inSerialize(typeof(int)), 0);
+        p.PkKey = (PACKETSTATE)BitConverter.ToInt32(m_se.inSerialize(typeof(int)), 0);
+        p.PkPlayerID = BitConverter.ToInt32(m_se.inSerialize(typeof(int)), 0);
+
+        return p;
     }
 
 
-    public void RecvedFromServerTest(int ID)
-    {
-        if (m_Player.ContainsKey(ID))
-        {
-            recvedFromServer();
-            m_Player[ID].Read(m_inputStream);
-        }
-        else
-        {
-            Debug.Log("I can't Find a Player Key");
-        }
-    }
+
+
+    //public void SendToServerTest(int ID)
+    //{
+    //    if (m_Player.ContainsKey(ID))
+    //    {
+    //        m_Player[ID].Wirte(m_outputStream);
+    //        sendToServer();
+    //    }
+    //    else
+    //    {
+    //        Debug.Log("I can't Find a Player Key");
+    //    }
+    //}
+
+
+    //public void RecvedFromServerTest(int ID)
+    //{
+    //    if (m_Player.ContainsKey(ID))
+    //    {
+    //        recvedFromServer();
+    //        m_Player[ID].Read(m_inputStream);
+    //    }
+    //    else
+    //    {
+    //        Debug.Log("I can't Find a Player Key");
+    //    }
+    //}
 
 
 

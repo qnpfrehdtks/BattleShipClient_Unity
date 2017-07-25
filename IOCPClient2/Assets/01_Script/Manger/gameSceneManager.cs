@@ -13,8 +13,6 @@ public enum SCENE
 
 }
 
-
-
 public class gameSceneManager : Singleton_Manager<gameSceneManager> {
 
     private CameraFadeInOut m_fadeInOutCtrl;

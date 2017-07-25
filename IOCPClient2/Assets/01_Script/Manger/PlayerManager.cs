@@ -7,8 +7,6 @@ public class PlayerManager : Singleton_Manager<PlayerManager>
 {
     private Dictionary<int,Player> m_PlayerTable;
 
-
-
     public bool m_isEnemyPlayerConnected { get; private set; }
     public bool m_isPlayerConnected { get; private set; }
 
@@ -22,7 +20,7 @@ public class PlayerManager : Singleton_Manager<PlayerManager>
         m_isEnemyPlayerConnected = false;
         m_PlayerNum = 0;
         m_PlayerID = -1;
-        m_PlayerEnemyID = 1;
+        m_PlayerEnemyID = -1;
         m_PlayerTable = new Dictionary<int, Player>();
 
         return true;
@@ -72,7 +70,7 @@ public class PlayerManager : Singleton_Manager<PlayerManager>
             Debug.Log("Player Add and Player Enter Send Succ");
         }
         //적 플레이어 입장시 처리.
-        else if (m_PlayerNum > 0 && m_PlayerEnemyID != -1)
+        else if (m_PlayerNum > 0 && m_PlayerEnemyID == -1)
         {
             m_PlayerEnemyID = player.m_Id;
             m_isEnemyPlayerConnected = true;

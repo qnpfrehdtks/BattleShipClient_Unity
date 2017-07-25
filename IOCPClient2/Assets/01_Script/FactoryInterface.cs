@@ -40,7 +40,8 @@ public class SceneCtrlController  {
                     break;
 
                 case SCENE.SC_BATTLE:
-
+                    Debug.Log("Wait Scene Ctrl switch Enter");
+                    newScencCtrl = new BattleCtrl();
                     break;
             }
 
