@@ -56,7 +56,6 @@ GameObject:
   - component: {fileID: 33164747418407520}
   - component: {fileID: 23316489233274242}
   - component: {fileID: 65750200668457952}
-  - component: {fileID: 114228136028702522}
   m_Layer: 0
   m_Name: Ship
   m_TagString: Ship
@@ -256,20 +255,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.11, y: 0.11, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &114228136028702522
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1589116044860506}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 775b539205096c445be0d13349a7f435, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Go: {fileID: 0}
-  m_shipKind: 2
-  m_ShipName: Destroyer
 --- !u!114 &114476568477031266
 MonoBehaviour:
   m_ObjectHideFlags: 1

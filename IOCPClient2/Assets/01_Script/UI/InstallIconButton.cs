@@ -52,10 +52,10 @@ public class InstallIconButton : MonoBehaviour {
         }
     }
 
-    public void OK()
-    {
-        UIPanel_Ready.instance.installShip();
-    }
+    //public void OK()
+    //{
+    //    UIPanel_Ready.instance.installShip();
+    //}
 
     public void Cancle()
     {

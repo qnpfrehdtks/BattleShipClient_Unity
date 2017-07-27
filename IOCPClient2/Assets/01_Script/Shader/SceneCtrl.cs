@@ -62,7 +62,7 @@ public class ReadyCtrl : SceneCtrl
     public override bool SceneInit()
     {
 
-
+        PlayerManager.Instance.CreatePlayer();
         UIPanel_Ready.m_isClickDown = false;
         UIPanel_Ready.m_isDrag = false;
         UIPanel_Ready.m_isClickUp = false;
@@ -85,6 +85,9 @@ public class BattleCtrl : SceneCtrl
         UIPanel_Ready.m_isClickDown = false;
         UIPanel_Ready.m_isDrag = false;
         UIPanel_Ready.m_isClickUp = false;
+
+        PlayerManager.Instance.CreatePlayerCaptain();
+
 
         return true;
     }

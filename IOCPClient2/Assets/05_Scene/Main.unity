@@ -206,7 +206,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 345365708}
-  - component: {fileID: 345365707}
   m_Layer: 0
   m_Name: Destroyer 1
   m_TagString: Ship
@@ -214,21 +213,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &345365707
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 114950691247009596, guid: b9b19379b736657408cc66ebf2771341,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 345365706}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 775b539205096c445be0d13349a7f435, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Go: {fileID: 345365706}
-  m_shipKind: 2
-  m_ShipName: Destroyer
 --- !u!4 &345365708
 Transform:
   m_ObjectHideFlags: 0
@@ -614,7 +598,6 @@ GameObject:
   - component: {fileID: 1246167017}
   - component: {fileID: 1246167016}
   - component: {fileID: 1246167015}
-  - component: {fileID: 1246167014}
   m_Layer: 0
   m_Name: Ship
   m_TagString: Ship
@@ -636,21 +619,6 @@ Transform:
   m_Father: {fileID: 345365708}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1246167014
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 114285510374941522, guid: b9b19379b736657408cc66ebf2771341,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1246167012}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 775b539205096c445be0d13349a7f435, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Go: {fileID: 0}
-  m_shipKind: 2
-  m_ShipName: Destroyer
 --- !u!65 &1246167015
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -831,7 +799,8 @@ Prefab:
       propertyPath: m_LocalEulerAnglesHint.x
       value: -15.251
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 114232952284088864, guid: a4c591cfa860e264ca9e3c961d814862, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: a4c591cfa860e264ca9e3c961d814862, type: 2}
   m_IsPrefabParent: 0
 --- !u!1 &1757133402

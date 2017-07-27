@@ -18,7 +18,7 @@ public class gameSceneManager : Singleton_Manager<gameSceneManager> {
     private CameraFadeInOut m_fadeInOutCtrl;
     private SceneCtrlController m_scencCon;
 
-    private SCENE m_currentScene;
+    public SCENE m_currentScene { get; private set; }
    
     private float m_FadeOutTime = 0.5f;
     private float m_FadeInTime = 0.5f;

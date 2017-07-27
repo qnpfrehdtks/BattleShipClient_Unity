@@ -9,8 +9,6 @@ public class UIPanel_Ready : SingletonUIPanel<UIPanel_Ready>
 
    public bool m_isSelected { get; set; }
 
-
-
     public GameObject m_ToBattleButton;
 
     // 설치된 칸들의 기준 축이 될 오브젝ㅌ,
@@ -51,6 +49,11 @@ public class UIPanel_Ready : SingletonUIPanel<UIPanel_Ready>
                 GameObject chest = Instantiate(m_ChestObject);
                 chest.transform.parent = m_ChestAxis.transform;
                 chest.transform.localPosition = new Vector3(-0.9f * j, 0.1f, 0.9f * i);
+
+                ReadyChest ready = chest.AddComponent<ReadyChest>();
+                ready.m_X = j;
+                ready.m_Y = i;
+
                 m_ChestList.Add(chest);
             }
         }
@@ -91,6 +94,7 @@ public class UIPanel_Ready : SingletonUIPanel<UIPanel_Ready>
                 return;
             }
 
+       
             PlayerManager.Instance.DeleteShipFromPlayer(shipinfo, true);
             //// 만약 설치된 배 목록 이었다면 설치된 배 목록에서 우선 지워야 함.
             //if(m_InstalledShipMap.ContainsKey(shipinfo.m_shipKind))
@@ -117,35 +121,11 @@ public class UIPanel_Ready : SingletonUIPanel<UIPanel_Ready>
     }
 
 
-    ////// 이미 설치된 함선들을 선택할 때 쓰는 함수.
-    ////public void SelectShip(Base_Ship ship)
-    ////{
-    ////    if (ship != null)
-    ////    {
-    ////        Debug.Log("Selct a Ship");
-    ////        ship.NoInstallSetting();
-      
-    ////        m_TempShip = ship.gameObject;
-
-    ////        m_InstallButtons.SetShip(m_TempShip, ship);
-    ////    }
-    ////    else
-    ////    {
-    ////        m_isSelected = false;
-    ////        m_TempShip = null;
-    ////        m_TempSelectButton = null;
-    ////        m_InstallButtons.SetShip(null, null);
-    ////    }
-    ////}
-
-
-
-
 
 
     // 칸에 설치된에서 실행하는 함수임.
     // 배를 설치할 때 사용하는 함수.
-    public void installShip()
+    public void installShip(int X, int Y)
     {
         if(m_isSelected)
         {
@@ -154,7 +134,7 @@ public class UIPanel_Ready : SingletonUIPanel<UIPanel_Ready>
             {
                 // 셀렉트 끝.
                 m_isSelected = false;
-                ship.InstallSetting();      
+                ship.InstallSetting(X, Y);      
 
                 // 버튼을 설치 됫다고 알리자.
                 m_TempSelectButton.InstalledButton();
@@ -190,20 +170,4 @@ public class UIPanel_Ready : SingletonUIPanel<UIPanel_Ready>
             m_ToBattleButton.SetActive(true);
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }

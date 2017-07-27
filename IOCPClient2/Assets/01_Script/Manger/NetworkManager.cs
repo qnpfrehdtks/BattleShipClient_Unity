@@ -75,7 +75,7 @@ public class NetworkManager : Singleton_Manager<NetworkManager>
                    p = classifyPacket();
 
                     // 서버로 부터 WAIT란 패킷을 받았을 때
-                    if (p.PkKey == PACKETSTATE.PK_PLAYER_WAIT)
+                    if (p.PkKey == (int)PACKETSTATE.PK_PLAYER_WAIT)
                     {
                         Debug.Log("Wait for Enemey Player...");
                         m_se.resetIOStream();
@@ -84,7 +84,7 @@ public class NetworkManager : Singleton_Manager<NetworkManager>
                         yield return new WaitForSeconds(1.0f);
                     }
                     // 서버로 부터 적이 들어왔다는 패킷을 받았을때
-                    else if (p.PkKey == PACKETSTATE.PK_ENEMY_ENTER)
+                    else if (p.PkKey == (int)PACKETSTATE.PK_ENEMY_ENTER)
                     {
                         // 상대 방 적 정보가 무엇인지.
                         int EnemyPlayerID =  BitConverter.ToInt32(m_se.inSerialize(typeof(int)), 0);
@@ -113,7 +113,7 @@ public class NetworkManager : Singleton_Manager<NetworkManager>
 
 
                     // 서버로 부터 WAIT란 패킷을 받았을 때
-                    if (p.PkKey == PACKETSTATE.PK_PLAYER_WAIT)
+                    if (p.PkKey == (int)PACKETSTATE.PK_PLAYER_WAIT)
                     {
                         Debug.Log("wait Ready for Enemey Player...");
 
@@ -124,7 +124,7 @@ public class NetworkManager : Singleton_Manager<NetworkManager>
                         yield return new WaitForSeconds(1.0f);
                     }
                     // 서버로 부터 적이 들어왔다는 패킷을 받았을때
-                    else if (p.PkKey == PACKETSTATE.PK_ENEMY_READY)
+                    else if (p.PkKey == (int)PACKETSTATE.PK_ENEMY_READY)
                     {
                         
                         int EnemyPlayerID = BitConverter.ToInt32(m_se.inSerialize(typeof(int)), 0);
@@ -262,7 +262,7 @@ public class NetworkManager : Singleton_Manager<NetworkManager>
     private void createPacketFrame(int Size, PACKETSTATE packetState, int PlayerID)
     {
         m_se.outSerialize(Size);
-        m_se.outSerialize(packetState);
+        m_se.outSerialize((int)packetState);
         m_se.outSerialize(PlayerID);
     }
 
@@ -270,7 +270,7 @@ public class NetworkManager : Singleton_Manager<NetworkManager>
     {
         PacketHeader p;
         p.PkSize = BitConverter.ToInt32(m_se.inSerialize(typeof(int)), 0);
-        p.PkKey = (PACKETSTATE)BitConverter.ToInt32(m_se.inSerialize(typeof(int)), 0);
+        p.PkKey = BitConverter.ToInt32(m_se.inSerialize(typeof(int)), 0);
         p.PkPlayerID = BitConverter.ToInt32(m_se.inSerialize(typeof(int)), 0);
 
         return p;

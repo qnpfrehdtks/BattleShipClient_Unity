@@ -2397,13 +2397,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 737743045}
-  m_LocalRotation: {x: 0.7071068, y: -0.00000006775372, z: 0.000000012048986, w: 0.7071068}
-  m_LocalPosition: {x: -4.96, y: 48.474842, z: 4.21}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: -0.7071068, w: 0}
+  m_LocalPosition: {x: -3.007, y: 48.474842, z: 4.21}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 180}
+  m_LocalEulerAnglesHint: {x: 90, y: 180, z: 0}
 --- !u!1001 &822812665
 Prefab:
   m_ObjectHideFlags: 0
@@ -4714,6 +4714,16 @@ Prefab:
     - target: {fileID: 4735442294554500, guid: 56c1ce583934d5d46aabd0571f984b82, type: 2}
       propertyPath: m_RootOrder
       value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 114671391691987308, guid: 56c1ce583934d5d46aabd0571f984b82,
+        type: 2}
+      propertyPath: m_ShipName
+      value: Carrier
+      objectReference: {fileID: 0}
+    - target: {fileID: 114671391691987308, guid: 56c1ce583934d5d46aabd0571f984b82,
+        type: 2}
+      propertyPath: m_shipKind
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 56c1ce583934d5d46aabd0571f984b82, type: 2}

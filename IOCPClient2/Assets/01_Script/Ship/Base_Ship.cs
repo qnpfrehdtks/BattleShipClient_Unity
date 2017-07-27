@@ -4,45 +4,30 @@ using UnityEngine;
 
 public class Base_Ship : MonoBehaviour {
 
-
-    public bool m_isInstalled
-    {
-        get; set;
-    }
-
     private List<ShipChest> m_ShipChestList;
 
-    public GameObject m_Go;
     public SHIP m_shipKind;
-    public Transform m_Trans { get; private set; }
+
+    private Vector3 m_Postion;
     public Quaternion m_Quat{ get; private set; }
-    public Color m_Color { get; private set; }
 
-    //public float m_defX;
-    //public float m_defY;
+    public int m_X { get; set; }
+    public int m_Y { get; set; }
+    public int m_ChestSize { get; private set; }
+    public int m_Life { get; private set; }
 
-    //public int m_X;
-    //public int m_Y;
-
-    //public int m_SizeX;
-    //public int m_SizeY;
-
-    public bool m_isDrag
-    {
-        get; private set;
-    } // 지금 현재 설치 할려고 끌려 다니는중 인가???
-    public int m_ChestSize
-    {
-        get; private set;
-    }
-
-    public bool m_isCanInstall {
-        get; set; }
+    public bool m_isDrag { get; private set; } // 지금 현재 설치 할려고 끌려 다니는중 인가???
+    public bool m_isCanInstall { get; set; }
+    public bool m_isInstalled { get; set; }
+    public bool m_isDead { get; private set; }
 
     public string m_ShipName;
     // Use this for initialization
-    void Start () {
+    void Awake () {
 
+        DontDestroyOnLoad(gameObject);
+
+        m_isDead = false;
         m_isInstalled = false;
         m_isCanInstall = true;
          m_ShipChestList = new List<ShipChest>();
@@ -50,12 +35,13 @@ public class Base_Ship : MonoBehaviour {
 
         for (int i=0; i < shipChests.Length; i++)
         {
+
             m_ShipChestList.Add(shipChests[i]);
         }
 
         m_ChestSize = m_ShipChestList.Count;
 
-        m_Trans = GetComponent<Transform>();
+    
 
     }
 	
@@ -76,23 +62,16 @@ public class Base_Ship : MonoBehaviour {
             tempVec.x = tempX;
             tempVec.z = tempY;
 
-            m_Trans.position = tempVec;
+            transform.position = tempVec;
         }
     }
     
 
-    void SetPos(int X, int Y)
-    {
-        ////m_X = X;
-        ////m_Y = Y;
 
-        Vector3 pos = new Vector3(X * -1.2f, 0, Y * -1.2f);
-        m_Trans.position = pos;
-        
-    }
     void SetRotate(Vector3 Y)
     {
-        m_Trans.Rotate(Y);
+     //   m_Quat = m_Trans.rotation;
+        transform.Rotate(Y);
     }
 
 
@@ -104,7 +83,7 @@ public class Base_Ship : MonoBehaviour {
         // 확인한다 이 배가 설치 가능한 위치에 있는지
         for (int i=0; i < m_ChestSize; i++)
         {
-            if (m_ShipChestList[i].m_isCanInstall)
+            if (m_ShipChestList[i].m_isCanInstalled)
                 count++;
         }
 
@@ -118,14 +97,22 @@ public class Base_Ship : MonoBehaviour {
     }
 
 
-    public void InstallSetting()
+    public void InstallSetting(int X = 0, int Y = 0)
     {
         m_isDrag = false;
 
         Vector3 tempVec = transform.position;
         tempVec.y = 0.5f;
         transform.position = tempVec;
-        
+
+        m_Postion = tempVec;
+        m_Quat = transform.rotation;
+
+        m_X = X; m_Y = Y;
+
+        Debug.Log("들어갔자나");
+        CheckMyBlockXY();
+
         m_isInstalled = true;
     }
 
@@ -140,21 +127,66 @@ public class Base_Ship : MonoBehaviour {
     }
 
 
+
+    private void CheckMyBlockXY()
+    {
+        for(int i=0; i < m_ShipChestList.Count; i++)
+        {
+            m_ShipChestList[i].CheckMyXY();
+        }
+    }
+
     public void setInstallMode(bool TF )
     {
         if(TF)
         {
-            m_Go.SetActive(true);
+            gameObject.SetActive(true);
             m_isDrag = true;
             
         }
         else
         {
             m_isDrag = false;
-            m_Go.SetActive(false);
+            gameObject.SetActive(false);
+        }
+    }
+
+ 
+    public void SetPositon()
+    {
+
+        transform.position = m_Postion;
+        transform.rotation = m_Quat;
+        //  transform.position = m_Trans.position;
+        // transform.rotation = m_Quat;
+    }
+
+    public void Damaged()
+    {
+        m_Life -= 1;
+        if(m_Life <= 0)
+        {
+            m_Life = 0;
+            m_isDead = true;
+        }
+    }
+
+    public bool Repair()
+    {
+        if (!m_isDead)
+        {
+            m_Life += 1;
+            if (m_Life > m_ChestSize)
+            {
+                m_Life = m_ChestSize;
+            }
+
+            return true;
         }
 
-        
+        return false;
+
     }
+
 
 }

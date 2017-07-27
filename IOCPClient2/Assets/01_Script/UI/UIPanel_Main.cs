@@ -8,7 +8,7 @@ public class UIPanel_Main : SingletonUIPanel<UIPanel_Main>
 
     public void GotoWaiting()
     {
-        gameSceneManager.Instance.SceneChange(SCENE.SC_WAIT);
+        gameSceneManager.Instance.SceneChange(SCENE.SC_READY);
     }
 
     public void GotoExit()

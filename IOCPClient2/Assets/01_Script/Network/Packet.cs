@@ -22,7 +22,7 @@ enum PACKET_PROTOCOL
 struct PacketHeader
 {
     public int PkSize;
-    public PACKETSTATE PkKey;
+    public int PkKey;
     public int PkPlayerID;
 
 }

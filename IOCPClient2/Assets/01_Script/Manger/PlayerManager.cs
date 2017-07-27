@@ -3,9 +3,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum PLAYER
+{
+    MINE,
+    OPPONENT
+}
+
+
+
+
 public class PlayerManager : Singleton_Manager<PlayerManager>
 {
+
+    private PLAYER m_CurTurn;
+
     private Dictionary<int,Player> m_PlayerTable;
+
+    private GameObject m_PlayerCaptain;
+    private GameObject m_EnemyCaptain;
 
     public bool m_isEnemyPlayerConnected { get; private set; }
     public bool m_isPlayerConnected { get; private set; }
@@ -65,7 +80,7 @@ public class PlayerManager : Singleton_Manager<PlayerManager>
             m_PlayerID = player.m_Id;
             m_isPlayerConnected = true;
 
-            NetworkManager.Instance.sendPacketState(PACKETSTATE.PK_PLAYER_ENTER);
+         //   NetworkManager.Instance.sendPacketState(PACKETSTATE.PK_PLAYER_ENTER);
           
             Debug.Log("Player Add and Player Enter Send Succ");
         }
@@ -158,6 +173,47 @@ public class PlayerManager : Singleton_Manager<PlayerManager>
     {
         IS.Serialize(66);
     }
+
+    public void CreatePlayerCaptain()
+    {
+        m_PlayerCaptain = new GameObject("[Player]", typeof(Player));
+        Player player = m_PlayerCaptain.GetComponent<Player>();
+
+        m_PlayerCaptain.transform.position = new Vector3(0, 0, 0);
+        player = m_PlayerTable[m_PlayerID];
+    }
+
+
+    public PLAYER PlayerNextTurn()
+    {
+        if (m_CurTurn == PLAYER.MINE )
+        {
+            getCurPlayer().m_isYourTurn = false;
+            getEnemyPlayer().m_isYourTurn = true;
+
+            // 서버에 보낸다. 이 사실을 턴을 넘긴 사실을....
+            ///NetWorkManager
+            // 서버에 
+
+            // Camera Move 필요함.
+            m_CurTurn = PLAYER.OPPONENT;
+        }
+        else
+        {
+            getCurPlayer().m_isYourTurn = true;
+            getEnemyPlayer().m_isYourTurn = false;
+
+            // 서버에 턴이 바뀐 사실을 알린다.
+
+            //Camera Move 필요.
+
+            m_CurTurn = PLAYER.MINE;
+        }
+
+        return m_CurTurn;
+    }
+
+
 
 
 

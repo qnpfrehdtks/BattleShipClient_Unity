@@ -12,13 +12,13 @@ using System.Runtime.InteropServices;
 
 public class Player : MonoBehaviour  {
 
+    public bool m_isYourTurn;
     public int m_Id {get; private set; }
     public int m_EnemyId { get; set; }
     public Dictionary<SHIP, Base_Ship> m_InstalledShipMap;
 
 
     //  private List<PlayerObject> m_PlayerObjList;
-
 
 
     public Player(int ID)
