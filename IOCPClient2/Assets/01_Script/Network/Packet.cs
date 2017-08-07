@@ -19,7 +19,7 @@ enum PACKET_PROTOCOL
 
 [Serializable]
 [StructLayout(LayoutKind.Sequential)]
-struct PacketHeader
+public struct PacketHeader
 {
     public int PkSize;
     public int PkKey;
@@ -49,6 +49,7 @@ struct PacketHeader
     public byte[] inSerialize(Type t)
     {
         int Typesize = Marshal.SizeOf(t);
+      //  Debug.Log(Typesize);
         byte[] bytes = new byte[Typesize];
         m_inputStream.Serialize(bytes, Typesize);
 

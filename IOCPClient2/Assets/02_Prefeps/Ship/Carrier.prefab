@@ -439,8 +439,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a1a4cdb1eb44264d9131f9077486acb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_X: 0
-  m_Y: 0
+  m_ChestState: 0
 --- !u!114 &114240652833976254
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -452,8 +451,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a1a4cdb1eb44264d9131f9077486acb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_X: 0
-  m_Y: 0
+  m_ChestState: 0
 --- !u!114 &114588388677442108
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -465,8 +463,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a1a4cdb1eb44264d9131f9077486acb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_X: 0
-  m_Y: 0
+  m_ChestState: 0
 --- !u!114 &114671391691987308
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -478,8 +475,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 775b539205096c445be0d13349a7f435, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_shipKind: 0
-  m_ShipName: 
+  m_shipKind: 3
+  m_ShipName: Carrier
 --- !u!114 &114772041241075928
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -491,8 +488,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a1a4cdb1eb44264d9131f9077486acb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_X: 0
-  m_Y: 0
+  m_ChestState: 0
 --- !u!114 &114943245526150694
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -504,8 +500,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a1a4cdb1eb44264d9131f9077486acb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_X: 0
-  m_Y: 0
+  m_ChestState: 0
 --- !u!212 &212041349065335508
 SpriteRenderer:
   m_ObjectHideFlags: 1

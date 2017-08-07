@@ -83,7 +83,7 @@ public class Base_Ship : MonoBehaviour {
         // 확인한다 이 배가 설치 가능한 위치에 있는지
         for (int i=0; i < m_ChestSize; i++)
         {
-            if (m_ShipChestList[i].m_isCanInstalled)
+            if (m_ShipChestList[i].m_ChestState != CHEST_STATE.RED)
                 count++;
         }
 
@@ -111,7 +111,7 @@ public class Base_Ship : MonoBehaviour {
         m_X = X; m_Y = Y;
 
         Debug.Log("들어갔자나");
-        CheckMyBlockXY();
+   //     CheckMyBlockXY();
 
         m_isInstalled = true;
     }
@@ -132,7 +132,7 @@ public class Base_Ship : MonoBehaviour {
     {
         for(int i=0; i < m_ShipChestList.Count; i++)
         {
-            m_ShipChestList[i].CheckMyXY();
+         //   m_ShipChestList[i].CheckMyXY();
         }
     }
 
@@ -188,5 +188,46 @@ public class Base_Ship : MonoBehaviour {
 
     }
 
+
+
+    public void BattleCheckBlock()
+    {
+        for(int i=0; i < m_ShipChestList.Count; i++)
+        {
+            m_ShipChestList[i].BattleCheckBlock();
+        }
+    }
+
+    public bool DamagedBattleChest(sVector2 pt)
+    {
+        for (int i = 0; i < m_ShipChestList.Count; i++)
+        {
+            if (pt.x == m_ShipChestList[i].m_Pt.x
+                && pt.y == m_ShipChestList[i].m_Pt.y)
+            {
+                m_ShipChestList[i].ChangeState(CHEST_STATE.RED);
+                Damaged();
+
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+
+    public bool CheckShipHavePoint(sVector2 pt)
+    {
+        for (int i = 0; i < m_ShipChestList.Count; i++)
+        {
+            if (pt.x == m_ShipChestList[i].m_Pt.x
+                && pt.y == m_ShipChestList[i].m_Pt.y)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
 }

@@ -80,7 +80,7 @@ public class PlayerManager : Singleton_Manager<PlayerManager>
             m_PlayerID = player.m_Id;
             m_isPlayerConnected = true;
 
-         //   NetworkManager.Instance.sendPacketState(PACKETSTATE.PK_PLAYER_ENTER);
+            NetworkManager.Instance.sendPacketState(PACKETSTATE.PK_PLAYER_ENTER);
           
             Debug.Log("Player Add and Player Enter Send Succ");
         }
@@ -88,6 +88,7 @@ public class PlayerManager : Singleton_Manager<PlayerManager>
         else if (m_PlayerNum > 0 && m_PlayerEnemyID == -1)
         {
             m_PlayerEnemyID = player.m_Id;
+            getCurPlayer().m_EnemyId = m_PlayerEnemyID;
             m_isEnemyPlayerConnected = true;
 
             Debug.Log(" Enemy Player Add and Player Enter Send Succ");
@@ -184,6 +185,9 @@ public class PlayerManager : Singleton_Manager<PlayerManager>
     }
 
 
+
+
+
     public PLAYER PlayerNextTurn()
     {
         if (m_CurTurn == PLAYER.MINE )
@@ -213,9 +217,43 @@ public class PlayerManager : Singleton_Manager<PlayerManager>
         return m_CurTurn;
     }
 
+    public void SettingStartTurn(PLAYER FirstPlayer)
+    {
+        if(FirstPlayer == PLAYER.MINE)
+        {
+            getCurPlayer().m_isYourTurn = true;
+            getEnemyPlayer().m_isYourTurn = false;
+        }
+        else if (FirstPlayer == PLAYER.OPPONENT)
+        {
+            getCurPlayer().m_isYourTurn = false;
+            getEnemyPlayer().m_isYourTurn = true;
+        }
+
+        m_CurTurn = FirstPlayer;
+    }
 
 
+    public void CheckShipPos()
+    {
+       for(SHIP i=0; i < SHIP.WAR_SHIP; i++)
+        {
+            getCurPlayer().m_InstalledShipMap[i].BattleCheckBlock();
+        }
 
+    }
 
+    public void CheckShipDamaged(sVector2 pt)
+    {
+        for (SHIP i = 0; i < SHIP.WAR_SHIP; i++)
+        {
+            if (getCurPlayer().m_InstalledShipMap[i].DamagedBattleChest(pt))
+            {
+                break;
+            }
+
+        }
+
+    }
 
 }

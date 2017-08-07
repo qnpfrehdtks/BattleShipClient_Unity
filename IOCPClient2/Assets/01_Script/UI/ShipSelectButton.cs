@@ -85,12 +85,14 @@ public class ShipSelectButton : MonoBehaviour {
     {
         if (m_State == SELECT_BUTTON_STATE.IDLE || m_State == SELECT_BUTTON_STATE.INSTALLED)
         {
+            SoundManager.Instance.playSoundOnseShot("OK");
             // 버튼에서 배를 불러오자.
             UIPanel_Ready.instance.ShipCall(this,m_Go);
             SelectButton();
         }
         else if(m_State == SELECT_BUTTON_STATE.SELECTED)
         {
+            SoundManager.Instance.playSoundOnseShot("FAIL");
             //버튼에서 배를 해제하자.
             UIPanel_Ready.instance.ShipCall(this, null);
             UnselectButton();

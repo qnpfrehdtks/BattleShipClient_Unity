@@ -40,7 +40,6 @@ GameObject:
   - component: {fileID: 33934006035978226}
   - component: {fileID: 23991258176501782}
   - component: {fileID: 65568584285642370}
-  - component: {fileID: 114893403004467514}
   m_Layer: 0
   m_Name: Tug
   m_TagString: Ship
@@ -223,7 +222,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 775b539205096c445be0d13349a7f435, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Go: {fileID: 1501031650970036}
   m_shipKind: 1
   m_ShipName: PT Boat
 --- !u!114 &114540350993750382
@@ -237,6 +235,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a1a4cdb1eb44264d9131f9077486acb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_ChestState: 0
 --- !u!114 &114600910648799752
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -248,20 +247,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a1a4cdb1eb44264d9131f9077486acb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114893403004467514
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1430600058679694}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 775b539205096c445be0d13349a7f435, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Go: {fileID: 0}
-  m_shipKind: 1
-  m_ShipName: PT Boat
+  m_ChestState: 0
 --- !u!212 &212523931627500656
 SpriteRenderer:
   m_ObjectHideFlags: 1

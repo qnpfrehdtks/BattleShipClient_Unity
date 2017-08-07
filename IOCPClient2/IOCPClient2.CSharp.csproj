@@ -92,6 +92,7 @@
     <Compile Include="Assets\01_Script\Manger\LoginManager.cs" />
     <Compile Include="Assets\01_Script\Manger\NetworkManager.cs" />
     <Compile Include="Assets\01_Script\Manger\PlayerManager.cs" />
+    <Compile Include="Assets\01_Script\Manger\SceneCtrl.cs" />
     <Compile Include="Assets\01_Script\Manger\Singleton_Manager.cs" />
     <Compile Include="Assets\01_Script\Manger\SoundManager.cs" />
     <Compile Include="Assets\01_Script\Manger\UIManager.cs" />
@@ -99,7 +100,6 @@
     <Compile Include="Assets\01_Script\Network\IOCPTest.cs" />
     <Compile Include="Assets\01_Script\Network\Packet.cs" />
     <Compile Include="Assets\01_Script\Player.cs" />
-    <Compile Include="Assets\01_Script\Shader\SceneCtrl.cs" />
     <Compile Include="Assets\01_Script\Ship\Base_Ship.cs" />
     <Compile Include="Assets\01_Script\Ship\Missile.cs" />
     <Compile Include="Assets\01_Script\UI\Chest\BattleChest.cs" />
@@ -107,15 +107,23 @@
     <Compile Include="Assets\01_Script\UI\Chest\ReadyChest.cs" />
     <Compile Include="Assets\01_Script\UI\Chest\ShipChest.cs" />
     <Compile Include="Assets\01_Script\UI\InstallIconButton.cs" />
+    <Compile Include="Assets\01_Script\UI\RaderRotate.cs" />
     <Compile Include="Assets\01_Script\UI\Ready_BackToReady.cs" />
     <Compile Include="Assets\01_Script\UI\ShipSelectButton.cs" />
-    <Compile Include="Assets\01_Script\UI\UIPanel_Base.cs" />
-    <Compile Include="Assets\01_Script\UI\UIPanel_Battle.cs" />
-    <Compile Include="Assets\01_Script\UI\UIPanel_Main.cs" />
-    <Compile Include="Assets\01_Script\UI\UIPanel_Ready.cs" />
-    <Compile Include="Assets\01_Script\UI\UIPanel_Wait.cs" />
+    <Compile Include="Assets\01_Script\UI\SkillIcon\Skill_Icon.cs" />
+    <Compile Include="Assets\01_Script\UI\UIPanel\UIPanel_Base.cs" />
+    <Compile Include="Assets\01_Script\UI\UIPanel\UIPanel_Battle.cs" />
+    <Compile Include="Assets\01_Script\UI\UIPanel\UIPanel_Main.cs" />
+    <Compile Include="Assets\01_Script\UI\UIPanel\UIPanel_Ready.cs" />
+    <Compile Include="Assets\01_Script\UI\UIPanel\UIPanel_Wait.cs" />
     <Compile Include="Assets\01_Script\WaveController.cs" />
-    <Compile Include="Assets\GrassRoadRace\Script\CameraMove.cs" />
+    <Compile Include="Assets\Cartoon FX\Scripts\CFX_AutoRotate.cs" />
+    <Compile Include="Assets\JMO Assets\Cartoon FX\Scripts\CFX2_AutoRotate.cs" />
+    <Compile Include="Assets\JMO Assets\Cartoon FX\Scripts\CFX_AutoDestructShuriken.cs" />
+    <Compile Include="Assets\JMO Assets\Cartoon FX\Scripts\CFX_AutodestructWhenNoChildren.cs" />
+    <Compile Include="Assets\JMO Assets\Cartoon FX\Scripts\CFX_LightIntensityFade.cs" />
+    <Compile Include="Assets\JMO Assets\Cartoon FX\Scripts\CFX_ShurikenThreadFix.cs" />
+    <Compile Include="Assets\JMO Assets\Cartoon FX\Spawn System\CFX_SpawnSystem.cs" />
     <Compile Include="Assets\UITween\Prefabs\Click Effect Pref\ClickedWaveAnimation.cs" />
     <Compile Include="Assets\UITween\ScenesExamplesScripts\ActivateOnEnable.cs" />
     <Compile Include="Assets\UITween\ScenesExamplesScripts\CreateAnimImage.cs" />
@@ -128,8 +136,17 @@
   <ItemGroup>
     <None Include="Assets\01_Script\Shader\NewSurfaceShader.shader" />
     <None Include="Assets\04_Image\03_Fonts\Bowlby_One\OFL.txt" />
+    <None Include="Assets\Cartoon FX\CartoonFX Readme.txt" />
+    <None Include="Assets\Cartoon FX\CartoonFX Releases Notes.txt" />
+    <None Include="Assets\JMO Assets\!JMO Assets Readme.txt" />
+    <None Include="Assets\JMO Assets\Cartoon FX Easy Editor\CartoonFX Easy Editor Readme.txt" />
+    <None Include="Assets\JMO Assets\Cartoon FX\CartoonFX2 Readme.txt" />
+    <None Include="Assets\JMO Assets\Cartoon FX\CartoonFX2 Releases Notes.txt" />
+    <None Include="Assets\JMO Assets\Cartoon FX\Shaders (Mobile)\CFXM_MobileParticleAdd_Alpha8.shader" />
     <None Include="Assets\Plugins\Pixelplacement\iTween\ReadMe!\ReadMe!.txt" />
+    <None Include="Assets\Resources\Version.txt" />
     <None Include="Assets\Standard Assets\CrossPlatformInput\CrossPlatformInputGuidelines.txt" />
+    <None Include="Assets\_Creepy_Cat\3D Shoot&apos;EmUp_Effect_Vol_1\_FAQ - Informations\Help Readme SOS.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />
 </Project>

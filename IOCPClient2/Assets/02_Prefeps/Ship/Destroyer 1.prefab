@@ -92,7 +92,6 @@ GameObject:
   - component: {fileID: 33285223950625430}
   - component: {fileID: 23744657975395812}
   - component: {fileID: 65343241514619104}
-  - component: {fileID: 114285510374941522}
   m_Layer: 0
   m_Name: Ship
   m_TagString: Ship
@@ -267,20 +266,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a1a4cdb1eb44264d9131f9077486acb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114285510374941522
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1977010755327588}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 775b539205096c445be0d13349a7f435, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Go: {fileID: 0}
-  m_shipKind: 2
-  m_ShipName: Destroyer
+  m_ChestState: 0
 --- !u!114 &114433778470348620
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -292,6 +278,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a1a4cdb1eb44264d9131f9077486acb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_ChestState: 0
 --- !u!114 &114557414754594032
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -303,6 +290,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a1a4cdb1eb44264d9131f9077486acb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_ChestState: 0
 --- !u!114 &114950691247009596
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -314,7 +302,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 775b539205096c445be0d13349a7f435, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Go: {fileID: 1147630361586746}
   m_shipKind: 2
   m_ShipName: Destroyer
 --- !u!212 &212050522870713732

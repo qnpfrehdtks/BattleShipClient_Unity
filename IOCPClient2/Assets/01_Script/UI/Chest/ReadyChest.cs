@@ -11,7 +11,7 @@ public class ReadyChest : Chest {
 
     void OnMouseUp()
     {
-        UIPanel_Ready.instance.installShip(m_X, m_Y);
+        UIPanel_Ready.instance.installShip((int)m_Pt.x, (int)m_Pt.y);
        
     }
 

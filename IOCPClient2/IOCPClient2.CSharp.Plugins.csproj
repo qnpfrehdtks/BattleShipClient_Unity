@@ -86,8 +86,17 @@
   <ItemGroup>
     <None Include="Assets\01_Script\Shader\NewSurfaceShader.shader" />
     <None Include="Assets\04_Image\03_Fonts\Bowlby_One\OFL.txt" />
+    <None Include="Assets\Cartoon FX\CartoonFX Readme.txt" />
+    <None Include="Assets\Cartoon FX\CartoonFX Releases Notes.txt" />
+    <None Include="Assets\JMO Assets\!JMO Assets Readme.txt" />
+    <None Include="Assets\JMO Assets\Cartoon FX Easy Editor\CartoonFX Easy Editor Readme.txt" />
+    <None Include="Assets\JMO Assets\Cartoon FX\CartoonFX2 Readme.txt" />
+    <None Include="Assets\JMO Assets\Cartoon FX\CartoonFX2 Releases Notes.txt" />
+    <None Include="Assets\JMO Assets\Cartoon FX\Shaders (Mobile)\CFXM_MobileParticleAdd_Alpha8.shader" />
     <None Include="Assets\Plugins\Pixelplacement\iTween\ReadMe!\ReadMe!.txt" />
+    <None Include="Assets\Resources\Version.txt" />
     <None Include="Assets\Standard Assets\CrossPlatformInput\CrossPlatformInputGuidelines.txt" />
+    <None Include="Assets\_Creepy_Cat\3D Shoot&apos;EmUp_Effect_Vol_1\_FAQ - Informations\Help Readme SOS.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />
 </Project>

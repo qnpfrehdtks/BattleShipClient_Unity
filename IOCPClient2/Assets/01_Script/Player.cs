@@ -17,7 +17,6 @@ public class Player : MonoBehaviour  {
     public int m_EnemyId { get; set; }
     public Dictionary<SHIP, Base_Ship> m_InstalledShipMap;
 
-
     //  private List<PlayerObject> m_PlayerObjList;
 
 
@@ -68,6 +67,27 @@ public class Player : MonoBehaviour  {
             return -1;
         }
     }
+
+    public int ShipRaderCount(sVector2[] pos)
+    {
+        int count = 0;
+
+        for(SHIP i=0; i < SHIP.WAR_SHIP; i++)
+        {
+            for (int j = 0; j < pos.Length; j++)
+            {
+                if (m_InstalledShipMap[i].CheckShipHavePoint(pos[j]))
+                {
+                    count++;
+                    break;
+                }
+            }
+        }
+
+        return count;
+    }
+
+
 
 
 }

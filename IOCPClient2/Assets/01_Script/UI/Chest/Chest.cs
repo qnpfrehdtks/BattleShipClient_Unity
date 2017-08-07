@@ -2,6 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public struct sVector2
+{
+    public int x; public int y;
+
+}
+
+
+
+
+
+
 public abstract class Chest : MonoBehaviour {
 
 
@@ -11,21 +22,24 @@ public abstract class Chest : MonoBehaviour {
     }
 
 
-    protected CHEST_STATE m_ChestState;
+    public CHEST_STATE m_ChestState;
     protected SpriteRenderer m_Renderer;
     protected Color m_OriginColor;
     protected SCENE m_CurScene;
 
-    public bool m_isCanInstalled { get; set;}
+    public bool m_isCanInstalled;
 
-    public int m_X;
-    public int m_Y;
+    public sVector2 m_Pt;
 
-   public void init()
+
+   public virtual void init()
     {
+        
+        m_isCanInstalled = true;
         m_CurScene = gameSceneManager.Instance.m_currentScene;
         m_Renderer = GetComponent<SpriteRenderer>();
         m_OriginColor = m_Renderer.color;
+
     }
 
 
@@ -48,6 +62,14 @@ public abstract class Chest : MonoBehaviour {
     }
 
 
+    public virtual void ShipChestCheck()
+    {
+      
+    }
+
+
+
+
     public void ChangeState(CHEST_STATE state)
     {
         switch (state)
@@ -64,6 +86,10 @@ public abstract class Chest : MonoBehaviour {
             case CHEST_STATE.YELLOW:
                 m_Renderer.color = Color.yellow;
                 break;
+            case CHEST_STATE.BLUE:
+                m_Renderer.color = Color.blue;
+                break;
+
         }
 
         m_ChestState = state;

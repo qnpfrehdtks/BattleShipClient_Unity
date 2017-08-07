@@ -7,11 +7,13 @@ public class SoundManager : Singleton_Manager<SoundManager>
 {
 
     AudioSource audioSource;
+    Dictionary<string, AudioClip> BGMTable;
     Dictionary<string, AudioClip> audioTable;
 
     protected override bool Init()
     {
-        AudioSource[] SoundObject = Resources.LoadAll<AudioSource>("Sound/BGM");
+        AudioSource[] SoundObject = Resources.LoadAll<AudioSource>("02Sound/BGM");
+        AudioSource[] AudioObject = Resources.LoadAll<AudioSource>("02Sound/Audio");
 
         if (audioSource == null)
         {
@@ -21,7 +23,10 @@ public class SoundManager : Singleton_Manager<SoundManager>
         }
 
         audioTable = new Dictionary<string, AudioClip>();
+        BGMTable = new Dictionary<string, AudioClip>();
 
+
+        // 브금을 집어넣자
         for (int i = 0; i < SoundObject.Length; i++)
         {
             // GameObject obj = Instantiate(SoundObject[i]) ;
@@ -29,7 +34,19 @@ public class SoundManager : Singleton_Manager<SoundManager>
             AudioClip clip = SoundObject[i].clip;
             //  obj.transform.SetParent(transform);
             //  obj.SetActive(false);
-            audioTable.Add(SoundObject[i].gameObject.name, clip);
+            BGMTable.Add(SoundObject[i].gameObject.name, clip);
+
+        }
+
+        // 일반 사운드를 집어넣자.
+        for (int i = 0; i < AudioObject.Length; i++)
+        {
+            // GameObject obj = Instantiate(SoundObject[i]) ;
+            //   AudioClip clip = obj.GetComponent<AudioSource>().clip;
+            AudioClip clip = AudioObject[i].clip;
+            //  obj.transform.SetParent(transform);
+            //  obj.SetActive(false);
+            audioTable.Add(AudioObject[i].gameObject.name, clip);
 
         }
 
@@ -40,7 +57,7 @@ public class SoundManager : Singleton_Manager<SoundManager>
     {
         if (!audioSource.clip)
         {
-            audioSource.clip = audioTable[soundName];
+            audioSource.clip = BGMTable[soundName];
             audioSource.Play();
         }
         ///   Debug.Log(soundName);
@@ -52,7 +69,7 @@ public class SoundManager : Singleton_Manager<SoundManager>
             return;
         }
 
-        audioSource.clip = audioTable[soundName];
+        audioSource.clip = BGMTable[soundName];
         audioSource.Play();
 
     }
@@ -60,7 +77,14 @@ public class SoundManager : Singleton_Manager<SoundManager>
 
     public void playSoundOnseShot(string soundName)
     {
-        audioSource.PlayOneShot(audioTable[soundName]);
+        if (audioTable.ContainsKey(soundName))
+        {
+            audioSource.PlayOneShot(audioTable[soundName]);
+        }
+        else
+        {
+            Debug.Log("해당 사운드를 가지고 있지 않음.");
+        }
     }
 
     public void stopCurBGM()
