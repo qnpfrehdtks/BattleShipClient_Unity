@@ -785,8 +785,6 @@ public class NetworkManager : Singleton_Manager<NetworkManager>
         OnceSendandRecv(PACKETSTATE.PK_TURN_CHECK);
     }
 
-
-
     public void AddAttackPt(sVector2 pos)
     {
 
@@ -802,8 +800,6 @@ public class NetworkManager : Singleton_Manager<NetworkManager>
 
         return p;
     }
-
-
     // 받은 스킬을 어떻게 처리할 것인가를 나타내는 함수. :D
      void RecvedSkillTypeProcess(SKILL recvSkill, sVector2[] blocks)
     {

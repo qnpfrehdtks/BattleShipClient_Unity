@@ -10,6 +10,9 @@ using System.IO;
 using System;
 using System.Runtime.InteropServices;
 
+
+// 테스트용 임.  여기서 여러가지 실험 과정 거침.
+
 [Serializable]
 [StructLayout(LayoutKind.Sequential)]
 public class dd

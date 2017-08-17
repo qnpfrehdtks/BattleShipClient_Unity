@@ -289,7 +289,7 @@ MonoBehaviour:
   m_Button: {fileID: 59420992}
   m_SkillX: {fileID: 403455830}
   m_SkillNumTXT: {fileID: 274955143}
-  m_SkillMaxNum: 2
+  m_SkillMaxNum: 3
 --- !u!1 &91641415
 GameObject:
   m_ObjectHideFlags: 0

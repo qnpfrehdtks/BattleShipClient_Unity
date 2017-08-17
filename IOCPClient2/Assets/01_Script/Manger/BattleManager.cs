@@ -58,8 +58,6 @@ public class BattleManager : Singleton_Manager<BattleManager>
         }
     }
 
-
-
     public bool IsCanClickSkill()
     {
         if ( m_isCanAttack && m_isChestSelected && m_SelectedChest)
@@ -74,8 +72,6 @@ public class BattleManager : Singleton_Manager<BattleManager>
         
     }
 
-
-   
     // Skill 아이콘이 이것을 실행시키는 권한을 가짐.
     public bool AttackBlock(int num, ATTKSHAPE shape, SKILL skill)
     {
@@ -222,8 +218,6 @@ public class BattleManager : Singleton_Manager<BattleManager>
     public void PlayerAttackToEnemyBlocks(sVector2[] DamagedPos, List<sVector2> noDamList, SKILL skill)
     {
         SoundManager.Instance.playSoundOnseShot("BOMB");
-    //    StartCoroutine(UIPanel_Battle.instance.SuperBombEffect(m_SelectedChest.transform.position));
-
         for (int i = 0; i < noDamList.Count; i++)
         {
             UIPanel_Battle.instance.noDamageToEnemy(noDamList[i], skill);
@@ -232,10 +226,9 @@ public class BattleManager : Singleton_Manager<BattleManager>
         {
             UIPanel_Battle.instance.DamageToEnemy(DamagedPos[i], skill);
         }
-
-      //  TileSelectReset(m_SelectedChest);
     }
 
+    // 턴을 바꾸는 함수
     public void TurnChange(PACKETSTATE state)
     {
 
@@ -269,6 +262,7 @@ public class BattleManager : Singleton_Manager<BattleManager>
 
     }
 
+
     public void UnSelectedAttackPt(BattleChest block)
     {
         block.m_isSelected = false;
@@ -278,23 +272,17 @@ public class BattleManager : Singleton_Manager<BattleManager>
 
     }
 
+    // 타일 선택한거 리셋!
     private void TileSelectReset(BattleChest block)
     {
-
         if (block != null)
         {
             block.m_isSelected = false;
             m_isChestSelected = false;
             m_SelectedChest = null;
-
-
             UIPanel_Battle.instance.UnSelectedAttackPt();
         }
     }
-
-
-
-
 
 
     // 단일 공격
@@ -426,9 +414,6 @@ public class BattleManager : Singleton_Manager<BattleManager>
 
         for (int i = -num; i <= num; i++)
         {
-           
-            //	printf("%d 번째 행의 차례\n", i);
-
             for (int j = -Math.Abs(i); j <= Math.Abs(i); j += 2 * Math.Abs(i))
             {
                 if ((center.m_Pt.x + j >= 0 && (center.m_Pt.x + j <= 9))
@@ -437,17 +422,12 @@ public class BattleManager : Singleton_Manager<BattleManager>
                 {
                     vec.x = center.m_Pt.x + j;
                     vec.y = center.m_Pt.y + i;
-
-                    //printf("%d,%d\n", vec.x, vec.y);
-                    //	Debug.Log(vec.x + "," + vec.y);
                     NetworkManager.Instance.AddAttackPt(vec);
 
                     if(j == 0)
                     {
                         break;
                     }
-
-
                 }
             }
         }

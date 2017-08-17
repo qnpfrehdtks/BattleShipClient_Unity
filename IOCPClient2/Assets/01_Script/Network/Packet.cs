@@ -88,11 +88,6 @@ public struct PacketHeader
 }
 
 
-
-
-
-
-
 [Serializable]
 [StructLayout(LayoutKind.Sequential)]
 class Packet

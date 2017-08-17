@@ -24,6 +24,8 @@ public enum SELECT_BUTTON_STATE
 
 public class ShipSelectButton : MonoBehaviour {
 
+
+    public Image m_Image;
     public GameObject m_Go;
 //    public GameObject m_Info;
 
@@ -41,6 +43,7 @@ public class ShipSelectButton : MonoBehaviour {
         m_ShipName.text = m_ShipObject.m_ShipName;
 
         UnselectButton();
+      
     }
 
 
@@ -69,11 +72,12 @@ public class ShipSelectButton : MonoBehaviour {
 
     void SelectButton()
     {
-
+      
         m_ShipObject.setInstallMode(true);
 
         m_isDrag = true;
         m_State = SELECT_BUTTON_STATE.SELECTED;
+
         m_StateInfo.text = "SELECTED";
         m_StateInfo.color = Color.blue;
         
@@ -88,6 +92,8 @@ public class ShipSelectButton : MonoBehaviour {
             SoundManager.Instance.playSoundOnseShot("OK");
             // 버튼에서 배를 불러오자.
             UIPanel_Ready.instance.ShipCall(this,m_Go);
+
+            iTween.ScaleFrom(m_StateInfo.gameObject, new Vector3(1.5f, 1.5f, 1.5f), 1.0f);
             SelectButton();
         }
         else if(m_State == SELECT_BUTTON_STATE.SELECTED)
@@ -95,6 +101,8 @@ public class ShipSelectButton : MonoBehaviour {
             SoundManager.Instance.playSoundOnseShot("FAIL");
             //버튼에서 배를 해제하자.
             UIPanel_Ready.instance.ShipCall(this, null);
+
+            iTween.ScaleFrom(m_StateInfo.gameObject, new Vector3(1.5f, 1.5f, 1.5f), 1.0f);
             UnselectButton();
         }
     }
