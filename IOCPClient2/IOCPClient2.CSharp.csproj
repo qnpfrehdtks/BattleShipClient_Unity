@@ -102,6 +102,7 @@
     <Compile Include="Assets\01_Script\Player.cs" />
     <Compile Include="Assets\01_Script\Ship\Base_Ship.cs" />
     <Compile Include="Assets\01_Script\Ship\Missile.cs" />
+    <Compile Include="Assets\01_Script\UI\BattleInfo.cs" />
     <Compile Include="Assets\01_Script\UI\Chest\BattleChest.cs" />
     <Compile Include="Assets\01_Script\UI\Chest\Chest.cs" />
     <Compile Include="Assets\01_Script\UI\Chest\ReadyChest.cs" />
@@ -110,6 +111,7 @@
     <Compile Include="Assets\01_Script\UI\RaderRotate.cs" />
     <Compile Include="Assets\01_Script\UI\Ready_BackToReady.cs" />
     <Compile Include="Assets\01_Script\UI\ShipSelectButton.cs" />
+    <Compile Include="Assets\01_Script\UI\SkillIcon\PlayTurn.cs" />
     <Compile Include="Assets\01_Script\UI\SkillIcon\Skill_Icon.cs" />
     <Compile Include="Assets\01_Script\UI\UIPanel\UIPanel_Base.cs" />
     <Compile Include="Assets\01_Script\UI\UIPanel\UIPanel_Battle.cs" />

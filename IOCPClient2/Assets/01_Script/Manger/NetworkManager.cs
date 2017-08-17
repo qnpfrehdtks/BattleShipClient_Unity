@@ -31,6 +31,8 @@ public enum PACKETSTATE
     PK_PLAYER_ATTACKWAIT,
     PK_PLAYER_DAMAGESUCC,
     PK_PLAYER_DAMAGEFAIL,
+    PK_PLAYER_MISSILEDEFNED,
+   
 
 
     PK_PLAYER_RADER,
@@ -47,12 +49,20 @@ public enum PACKETSTATE
 
     PK_TURN_CHECK,
     PK_TURN_CHANGE,
-    PK_TURN_NOCHANGE
+    PK_TURN_NOCHANGE,
+
+    PK_PLAYER_DIE,
+    PK_ENEMY_DIE,
+
+    PK_PLAYER_EXIT,
+    PK_ENEMY_EXIT
+
+
 }
 public class NetworkManager : Singleton_Manager<NetworkManager>
 {
     SocketAsyncEventArgs args = new SocketAsyncEventArgs();
-
+    
 
     public SKILL m_SelectedSkill;
     public            sVector2                           m_AttackPt { get; set; }
@@ -75,16 +85,25 @@ public class NetworkManager : Singleton_Manager<NetworkManager>
     {
         m_FindedShip = 0;
         m_AttackPtList = new List<sVector2>();
-        m_tempBuffer = new byte[90];
+        m_tempBuffer = new byte[6000];
         m_Player = new Dictionary<int, Player>();
         m_isConnectServer = false;
 
-        m_se = new Serilaizer(3000,3000);
+        m_se = new Serilaizer(6000,6000);
         m_sck = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         m_localEndPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 5001);
-
        // m_sck.ConnectAsync(args);
         return true;
+    }
+
+
+    public void AllClearInfo()
+    {
+        m_FindedShip = 0;
+        m_isConnectServer = false;
+        m_Player.Clear();
+        m_AttackPtList.Clear();
+        DisConnect();
     }
 
     // 서버에게 지속적으로 패킷을 보내는 함수임. 코루틴을 써서 매 간격 보낸다.
@@ -95,15 +114,18 @@ public class NetworkManager : Singleton_Manager<NetworkManager>
 
         while (!isMatchingComplete)
         {
-           
-
             switch (state)
             {
                 // 적 플레이어와 매칭이 됬네요...
                 case PACKETSTATE.PK_PLAYER_ENTER:
                     p = baseSendAndRecv(state);
+
+                    if (EnemyExitProcess((PACKETSTATE)p.PkKey))
+                    {
+                        isMatchingComplete = true;
+                    }
                     // 서버로 부터 WAIT란 패킷을 받았을 때
-                    if (p.PkKey == (int)PACKETSTATE.PK_PLAYER_WAIT)
+                    else if (p.PkKey == (int)PACKETSTATE.PK_PLAYER_WAIT)
                     {
                         Debug.Log("Wait for Enemey Player...");
                         m_se.resetIOStream();
@@ -132,16 +154,17 @@ public class NetworkManager : Singleton_Manager<NetworkManager>
 
                 case PACKETSTATE.PK_PLAYER_READY:
                     p = baseSendAndRecv(state);
-                    // 서버로 부터 WAIT란 패킷을 받았을 때
-                    if (p.PkKey == (int)PACKETSTATE.PK_PLAYER_WAIT)
+                    
+                     if (p.PkKey == (int)PACKETSTATE.PK_ENEMY_EXIT)
                     {
                         Debug.Log("wait Ready for Enemey Player...");
 
                         //버퍼 초기화~
                         m_se.resetIOStream();
-
+                        isMatchingComplete = true;
                         //1초 간격으로 보냄, Matching 될때까지
-                        yield return new WaitForSeconds(1.0f);
+                        gameSceneManager.Instance.SceneChange(SCENE.SC_BATTLE);
+
                     }
                     // 서버로 부터 적이 들어왔다는 패킷을 받았을때
                     else if (p.PkKey == (int)PACKETSTATE.PK_ENEMY_READY)
@@ -174,13 +197,31 @@ public class NetworkManager : Singleton_Manager<NetworkManager>
                         gameSceneManager.Instance.SceneChange(SCENE.SC_BATTLE);
                         //  sendToServer();
                     }
+                    else if (p.PkKey == (int)PACKETSTATE.PK_PLAYER_WAIT)
+                    {
+                        Debug.Log("wait Ready for Enemey Player...");
+
+                        //버퍼 초기화~
+                        m_se.resetIOStream();
+
+                        //1초 간격으로 보냄, Matching 될때까지
+                        yield return new WaitForSeconds(1.0f);
+
+                    }
+
+
                     break;
                 case PACKETSTATE.PK_ENEMY_ATTACKWAIT:
 
                     p = baseSendAndRecv(state);
 
+                    if (EnemyExitProcess((PACKETSTATE)p.PkKey))
+                    {
+                    //    m_se.resetIOStream();
+                        isMatchingComplete = true;
+                    }
                     // 서버로 부터 기다리라는 메세지를 받을때
-                    if (p.PkKey == (int)PACKETSTATE.PK_ENEMY_ATTACKWAIT)
+                    else if (p.PkKey == (int)PACKETSTATE.PK_ENEMY_ATTACKWAIT)
                     {
                         Debug.Log("wait Ready for Enemey Player...");
 
@@ -194,74 +235,56 @@ public class NetworkManager : Singleton_Manager<NetworkManager>
                     else if (p.PkKey == (int)PACKETSTATE.PK_ENEMY_ATTACK)
                     {
                         Debug.Log("Enemy Attack!!!");
+                 
                         // 공격 받은 지점을 패킷으로 부터 꺼내자!!
                         sVector2 pos = AddcoordinateFromPacket();
+                        Debug.Log(pos.x + ","  + pos.y + " 공격 받음");
                         // 패킷 버퍼 초기화~
                         m_se.resetIOStream();
-                       
+
                         isMatchingComplete = true;
 
-                        if (BattleManager.Instance.EnemyAttackToBlock(pos))
-                        sendPacketState(PACKETSTATE.PK_ENEMY_ATTACKSUCC);
-                        else sendPacketState(PACKETSTATE.PK_ENEMY_ATTACKFAIL);
+                       sendPacketState(BattleManager.Instance.EnemyAttackToBlock(pos));
 
-                        sendPacketState(PACKETSTATE.PK_TURN_CHECK);
+                        if (!PlayerManager.Instance.IsShipAllDie())
+                            sendPacketState(PACKETSTATE.PK_TURN_CHECK);
+                        else
+                            sendPacketState(PACKETSTATE.PK_PLAYER_DIE);
+
                     }
                     else if (p.PkKey == (int)PACKETSTATE.PK_ENEMY_SKILLATTACK)
                     {
-                        m_AttackPtList.Clear();
-
-                        Debug.Log("Enemy Skill!!!");
-                        sVector2[] blocks = new sVector2[(p.PkSize / 4) - 4];
+                        int AttackedSize = (p.PkSize - 16) / 8;
+                        sVector2[] blocks = new sVector2[AttackedSize];
 
                         SKILL skilltype = (SKILL)BitConverter.ToInt32(m_se.inSerialize(typeof(int)), 0);
 
-                        for (int i = 0; i < (p.PkSize / 4) - 4; i++)
+
+                        for (int i = 0; i < AttackedSize; i++)
                         {
                             // 레이더 체크 받은 지점을 패킷으로 부터 꺼내자!!
                             blocks[i] = AddcoordinateFromPacket();
-
+                            Debug.Log(blocks[i].x + "," + blocks[i].y + " 공격 받음");
                         }
+
+
                         m_se.resetIOStream();
 
+                        m_AttackPtList.Clear();
                         isMatchingComplete = true;
-
 
                         RecvedSkillTypeProcess(skilltype, blocks);
                         ////m_FindedShip = PlayerManager.Instance.getCurPlayer().ShipRaderCount(blocks);
                         ////sendPacketState(PACKETSTATE.PK_PLAYER_RADERRESULT);
                         ////sendPacketState(PACKETSTATE.PK_TURN_CHECK);
                     }
-
-
                     break;
-
-               
-
-
             }
 
             // yield return new WaitForSeconds(1.0f);
 
         }
 
-    }
-
-    public bool Connect()
-    {
-        try
-        {
-            Debug.Log("Connect Succ\r\n");
-            m_sck.Connect(m_localEndPoint);
-            m_isConnectServer = true;
-            return true;
-        }
-        catch
-        {
-            Debug.Log("Unable to connect to remote end point!\r\n");
-        }
-        m_isConnectServer = false;
-        return false;
     }
 
     public void sendPacketState(PACKETSTATE state)
@@ -271,7 +294,7 @@ public class NetworkManager : Singleton_Manager<NetworkManager>
             case PACKETSTATE.PK_PLAYER_ENTER:
                 StartCoroutine(whileSendPacket(state));
                 break;
-            case PACKETSTATE.PK_PLAYER_READY :
+            case PACKETSTATE.PK_PLAYER_READY:
                 StartCoroutine(whileSendPacket(state));
                 break;
             case PACKETSTATE.PK_BATTLE_START:
@@ -304,13 +327,23 @@ public class NetworkManager : Singleton_Manager<NetworkManager>
             case PACKETSTATE.PK_PLAYER_SKILLRESULT:
                 OnceSendandRecv(state);
                 break;
-
+            case PACKETSTATE.PK_PLAYER_DIE:
+                OnceSendandRecv(state);
+                break;
+            case PACKETSTATE.PK_PLAYER_EXIT:
+                OnceSendandRecv(state);
+                break;
+            case PACKETSTATE.PK_ENEMY_EXIT:
+                OnceSendandRecv(state);
+                break;
+            case PACKETSTATE.PK_PLAYER_MISSILEDEFNED:
+                OnceSendandRecv(state);
+                break;
 
         }
 
 
     }
-
 
     public void OnceSendandRecv(PACKETSTATE state)
     {
@@ -322,10 +355,17 @@ public class NetworkManager : Singleton_Manager<NetworkManager>
 
                 p = baseSendAndRecv(state);
                 // 서버로 부터 내턴이란 패킷을 받았을 때
-                if (p.PkKey == (int)PACKETSTATE.PK_MY_TURN)
+                if (p.PkKey == (int)PACKETSTATE.PK_ENEMY_EXIT)
                 {
-                    Debug.Log("It's MyFirst");
+                    BattleManager.Instance.GameStart(PLAYER.MINE);
+                    StartCoroutine(ForcedVictoryForTime(1.0f));
+                    m_se.resetIOStream();
 
+                    
+                    return;
+                }
+                else if (p.PkKey == (int)PACKETSTATE.PK_MY_TURN)
+                {
                     //버퍼 초기화~
                     m_se.resetIOStream();
 
@@ -334,7 +374,6 @@ public class NetworkManager : Singleton_Manager<NetworkManager>
                 }
                 else
                 {
-                    Debug.Log("Enemy's MyFirst");
 
                     BattleManager.Instance.GameStart(PLAYER.OPPONENT);
                     m_se.resetIOStream();
@@ -346,12 +385,15 @@ public class NetworkManager : Singleton_Manager<NetworkManager>
             case PACKETSTATE.PK_PLAYER_ATTACK:
 
                 p = AttackPtSendAndRecv(state);
-
+                if (EnemyExitProcess((PACKETSTATE)p.PkKey))
+                {
+                    return;
+                }
                 // 서버로 부터 적의 공격이 명중했다는 소식을 들음!!!
-                if (p.PkKey == (int)PACKETSTATE.PK_PLAYER_DAMAGESUCC)
+                else if (p.PkKey == (int)PACKETSTATE.PK_PLAYER_DAMAGESUCC)
                 {
                     m_se.resetIOStream();
-                   
+
                     // 타일좀 정리좀 하고
                     BattleManager.Instance.PlayerAttackToEnemyBlock(m_AttackPt, PACKETSTATE.PK_PLAYER_DAMAGESUCC);
 
@@ -367,6 +409,19 @@ public class NetworkManager : Singleton_Manager<NetworkManager>
                     // 다음 턴 누가 될지 서버한테 받읍시다.
                     sendPacketState(PACKETSTATE.PK_TURN_CHECK);
                 }
+                else if (p.PkKey == (int)PACKETSTATE.PK_PLAYER_MISSILEDEFNED)
+                {
+                    m_se.resetIOStream();
+                    BattleManager.Instance.EnemyMissileDefend();
+
+                    // 다음 턴 누가 될지 서버한테 받읍시다.
+                    sendPacketState(PACKETSTATE.PK_TURN_CHECK);
+                }
+                else if (p.PkKey == (int)PACKETSTATE.PK_ENEMY_DIE)
+                {
+                    BattleManager.Instance.BattleResult();
+                    m_se.resetIOStream();
+                }
                 // 서버가 아직 적이 공격 받을 준비를 못해다고 기다리레요.
                 // 근데 이거 받을 일 거의 없을듯.
                 else if (p.PkKey == (int)PACKETSTATE.PK_PLAYER_ATTACKWAIT)
@@ -379,31 +434,38 @@ public class NetworkManager : Singleton_Manager<NetworkManager>
                 }
 
                 break;
-                //레이더로 적의 배가 몇기 있는지 파악.
+            //레이더로 적의 배가 몇기 있는지 파악.
 
             case PACKETSTATE.PK_PLAYER_SKILLATTACK:
 
                 p = AttackPtListSendAndRecv(state);
 
-                Debug.Log("들어온난오오농노온ㅇ");
-
-
-                if (p.PkKey == (int)PACKETSTATE.PK_PLAYER_SKILLRESULT)
+                // 받고 난 뒤 처리
+                if (EnemyExitProcess((PACKETSTATE)p.PkKey))
+                {
+                    return;
+                }
+               else if (p.PkKey == (int)PACKETSTATE.PK_PLAYER_SKILLRESULT)
                 {
                     int Blocksize = (p.PkSize - 12) / 8;
                     sVector2[] DamagedPoses = new sVector2[Blocksize];
 
-                    for(int i = 0; i < Blocksize; i++)
+                    for (int i = 0; i < Blocksize; i++)
                     {
                         DamagedPoses[i] = AddcoordinateFromPacket();
                     }
 
-                    BattleManager.Instance.PlayerAttackToEnemyBlocks(DamagedPoses,m_AttackPtList, m_SelectedSkill);
+                    if (m_SelectedSkill != SKILL.DEFEND)
+                        BattleManager.Instance.PlayerAttackToEnemyBlocks(DamagedPoses, m_AttackPtList, m_SelectedSkill);
+                    else
+                        UIPanel_Battle.instance.DefendFailResult();
 
                     m_AttackPtList.Clear();
+                    m_se.resetIOStream();
+
                     sendPacketState(PACKETSTATE.PK_TURN_CHECK);
                 }
-               else if (p.PkKey == (int)PACKETSTATE.PK_PLAYER_RADERRESULT)
+                else if (p.PkKey == (int)PACKETSTATE.PK_PLAYER_RADERRESULT)
                 {
                     int count = BitConverter.ToInt32(m_se.inSerialize(typeof(int)), 0);
                     m_AttackPtList.Clear();
@@ -416,16 +478,34 @@ public class NetworkManager : Singleton_Manager<NetworkManager>
                     //1초 간격으로 보냄, 될때까지
                     //  yield return new WaitForSeconds(1.0f);
                 }
+                else if (p.PkKey == (int)PACKETSTATE.PK_PLAYER_MISSILEDEFNED)
+                {
+                    m_se.resetIOStream();
+                    BattleManager.Instance.EnemyMissileDefend();
+
+                    // 다음 턴 누가 될지 서버한테 받읍시다.
+                    sendPacketState(PACKETSTATE.PK_TURN_CHECK);
+
+                    //1초 간격으로 보냄, 될때까지
+                    //  yield return new WaitForSeconds(1.0f);
+                }
+                else if ( p.PkKey == (int)PACKETSTATE.PK_ENEMY_DIE )
+                {
+                    BattleManager.Instance.BattleResult();
+                    m_se.resetIOStream();
+                }
 
                 break;
-                // 맞춘거만 보넴
+            // 맞춘거만 보넴
             case PACKETSTATE.PK_PLAYER_SKILLRESULT:
 
-                createPacketFrame(4 * (3 + m_AttackPtList.Count), state, PlayerManager.Instance.m_PlayerID);
+                createPacketFrame(4 * (3 + (m_AttackPtList.Count * 2)), state, PlayerManager.Instance.m_PlayerID);
+                Debug.Log("사이즈다 " + 4 * (3 + (m_AttackPtList.Count * 2)));
 
                 // 그리고 스킬의 좌표도
-                for (int i=0; i < m_AttackPtList.Count; i++)
+                for (int i = 0; i < m_AttackPtList.Count; i++)
                 {
+                    Debug.Log("보낼려는 패킷의 양" + m_AttackPtList[i].x + " 와 " + m_AttackPtList[i].y);
                     AddcoordinateToPacket(m_AttackPtList[i]);
                 }
 
@@ -434,9 +514,8 @@ public class NetworkManager : Singleton_Manager<NetworkManager>
 
                 m_se.resetIOStream();
 
-                UIPanel_Battle.instance.SkillResult();
+                
                 m_AttackPtList.Clear();
-
 
                 break;
 
@@ -451,17 +530,31 @@ public class NetworkManager : Singleton_Manager<NetworkManager>
 
                 // 턴을 바꿀 준비
                 break;
+            case PACKETSTATE.PK_PLAYER_MISSILEDEFNED:
+                justSend(state);
+                m_se.resetIOStream();
+                // 턴을 바꿀 준비
+                break;
+            case PACKETSTATE.PK_PLAYER_DIE:
+                justSend(state);
+                m_se.resetIOStream();
+                break;
+
+            case PACKETSTATE.PK_PLAYER_EXIT:
+                justSend(state);
+                m_se.resetIOStream();
+                break;
 
             case PACKETSTATE.PK_TURN_CHECK:
-
-                Debug.Log("들어는 오냐");
-
                 p = baseSendAndRecv(state);
-                // 서버로 부터 내턴이란 패킷을 받았을 때
-                if (p.PkKey == (int)PACKETSTATE.PK_MY_TURN)
-                {
-                    Debug.Log(" MyTurn");
 
+                if (EnemyExitProcess((PACKETSTATE)p.PkKey))
+                {
+                    return;
+                }
+                // 서버로 부터 내턴이란 패킷을 받았을 때
+                else if (p.PkKey == (int)PACKETSTATE.PK_MY_TURN)
+                {
                     //버퍼 초기화~
                     m_se.resetIOStream();
                     BattleManager.Instance.TurnChange(PACKETSTATE.PK_MY_TURN);
@@ -469,13 +562,15 @@ public class NetworkManager : Singleton_Manager<NetworkManager>
                 }
                 else if (p.PkKey == (int)PACKETSTATE.PK_OPPO_TURN)
                 {
-                    Debug.Log("Enemy's Turn");
-
-
                     m_se.resetIOStream();
                     BattleManager.Instance.TurnChange(PACKETSTATE.PK_OPPO_TURN);
                     sendPacketState(PACKETSTATE.PK_ENEMY_ATTACKWAIT);
                     //
+                }
+                else if (p.PkKey == (int)PACKETSTATE.PK_ENEMY_DIE)
+                {
+                    BattleManager.Instance.BattleResult();
+                    m_se.resetIOStream();
                 }
                 break;
 
@@ -488,14 +583,51 @@ public class NetworkManager : Singleton_Manager<NetworkManager>
 
                 m_se.resetIOStream();
 
-                UIPanel_Battle.instance.RaderResult(m_FindedShip);
+                //  BattleManager.Instance.EnemyRaderToBlock()
+             //   BattleManager.Instance.EnemyRaderToBlock();
+             
 
                 // 레이더 결과 보냄.
                 break;
         }
     }
 
+    public bool Connect()
+    {
+        try
+        {
+            Debug.Log("Connect Succ\r\n");
+            m_sck.Connect(m_localEndPoint);
+            m_isConnectServer = true;
+            return true;
+        }
+        catch
+        {
+            Debug.Log("Unable to connect to remote end point!\r\n");
+        }
+        m_isConnectServer = false;
+        return false;
+    }
 
+    public bool DisConnect()
+    {
+        if (m_sck.Connected)
+        {
+            try
+            {
+                Debug.Log("DisConnect Succ\r\n");
+                m_sck.Disconnect(true);
+                m_isConnectServer = false;
+                return true;
+            }
+            catch
+            {
+                Debug.Log("Unable to connect to remote end point!\r\n");
+            }
+            m_isConnectServer = false;
+        }
+        return false;
+    }
 
     // 서버에게 outStrem의 버퍼 내부 값을 보내자.
     public void  sendToServer()
@@ -534,7 +666,7 @@ public class NetworkManager : Singleton_Manager<NetworkManager>
         int RecvedByte = 0;
         try
         {
-            byte[] tempBuffer = new byte[3000];
+            byte[] tempBuffer = new byte[6000];
             RecvedByte = m_sck.Receive(tempBuffer);
             m_se.SetInBuffer(tempBuffer);
             Debug.Log(" 받은 데이더 양 " + RecvedByte);
@@ -554,7 +686,8 @@ public class NetworkManager : Singleton_Manager<NetworkManager>
         {
             m_Player.Add(po.m_Id, po);
         }
-        else {
+        else
+        {
             Debug.Log("already owns a ID!!!");
         }
     }
@@ -573,20 +706,13 @@ public class NetworkManager : Singleton_Manager<NetworkManager>
         m_se.outSerialize(pos.y);
     }
 
-
-
     public sVector2 AddcoordinateFromPacket()
     {
         sVector2 pos;
         pos.x  = BitConverter.ToInt32(m_se.inSerialize(typeof(int)), 0);
         pos.y =  BitConverter.ToInt32(m_se.inSerialize(typeof(int)), 0);
         return pos;
-
     }
-
-  
-
-
 
     public PacketHeader baseSendAndRecv(PACKETSTATE state)
     {
@@ -644,9 +770,6 @@ public class NetworkManager : Singleton_Manager<NetworkManager>
         return p;
     }
 
-
-
-
     public void justSend(PACKETSTATE state)
     {
         //우선 서버에게 보낼 패킷 정보를 담자.
@@ -654,9 +777,6 @@ public class NetworkManager : Singleton_Manager<NetworkManager>
         //보낸다 요청을 서버에게
         sendToServer();
     }
-
-
-
 
     IEnumerator CheckTurnFromServer()
     {
@@ -684,20 +804,35 @@ public class NetworkManager : Singleton_Manager<NetworkManager>
     }
 
 
-
-    public void RecvedSkillTypeProcess(SKILL recvSkill, sVector2[] blocks)
+    // 받은 스킬을 어떻게 처리할 것인가를 나타내는 함수. :D
+     void RecvedSkillTypeProcess(SKILL recvSkill, sVector2[] blocks)
     {
         switch (recvSkill)
         {
             case SKILL.RADER:
                  m_FindedShip = PlayerManager.Instance.getCurPlayer().ShipRaderCount(blocks);
+
+                BattleManager.Instance.RaderResult(m_FindedShip);
                 sendPacketState(PACKETSTATE.PK_PLAYER_RADERRESULT);
                 sendPacketState(PACKETSTATE.PK_TURN_CHECK);
+                
                 break;
-
             case SKILL.SUPER_BOMB:
-                BattleManager.Instance.EnemyAttackToBlocks(blocks);
-                sendPacketState(PACKETSTATE.PK_PLAYER_SKILLRESULT);
+                // 적의 공격 성공하면 true, 막히면 false
+                BattleManager.Instance.EnemyAttackToBlocks(blocks, recvSkill);
+            
+                if (!PlayerManager.Instance.IsShipAllDie())
+                    sendPacketState(PACKETSTATE.PK_TURN_CHECK);
+                else
+                {
+                    sendPacketState(PACKETSTATE.PK_PLAYER_DIE);
+                    BattleManager.Instance.BattleResult();
+                }
+                break;
+            case SKILL.DEFEND:
+               
+                // 적의 공격 성공하면 true, 막히면 false
+                BattleManager.Instance.RecvDefendSkill(blocks, recvSkill);
                 sendPacketState(PACKETSTATE.PK_TURN_CHECK);
                 break;
         }
@@ -705,6 +840,26 @@ public class NetworkManager : Singleton_Manager<NetworkManager>
     }
 
 
+    bool EnemyExitProcess(PACKETSTATE state)
+    {
+       
+        if (state == PACKETSTATE.PK_ENEMY_EXIT)
+        {
+            BattleManager.Instance.ForcedVictory();
+            m_se.resetIOStream();
+            return true;
+        }
+
+        return false;
+    }
+
+     private IEnumerator ForcedVictoryForTime(float second)
+    {
+        yield return new WaitForSeconds(second);
+        BattleManager.Instance.ForcedVictory();
+
+       
+    } 
 
 
 

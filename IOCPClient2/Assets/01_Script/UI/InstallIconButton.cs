@@ -48,6 +48,7 @@ public class InstallIconButton : MonoBehaviour {
     {
         if (m_Ship != null)
         {
+            SoundManager.Instance.playSoundOnseShot("ClickSkill");
             m_Ship.transform.Rotate(m_rotateAngle);
         }
     }

@@ -27,18 +27,20 @@ public abstract class Singleton_Manager<T> : MonoBehaviour where T : Singleton_M
 
     public static bool createManager()
     {
-        if(isInitiated)
+        if (isInitiated)
         {
             Debug.Log("already exist Manager");
+            instance.Init();
             return false;
         }
+        else
+        {
+            instance = new GameObject("[Manager]" + typeof(T).ToString(), typeof(T)).GetComponent<T>();
 
-        instance = new GameObject("[Manager]" + typeof(T).ToString(), typeof(T)).GetComponent<T>();
-
-        isInitiated = true;
-        instance.Init();
-        DontDestroyOnLoad(instance.gameObject);
-
+            isInitiated = true;
+            instance.Init();
+            DontDestroyOnLoad(instance.gameObject);
+        }
         return true;
 
     }

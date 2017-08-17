@@ -236,7 +236,7 @@ public class PlayerManager : Singleton_Manager<PlayerManager>
 
     public void CheckShipPos()
     {
-       for(SHIP i=0; i < SHIP.WAR_SHIP; i++)
+       for(SHIP i=0; i <= SHIP.WAR_SHIP; i++)
         {
             getCurPlayer().m_InstalledShipMap[i].BattleCheckBlock();
         }
@@ -245,15 +245,36 @@ public class PlayerManager : Singleton_Manager<PlayerManager>
 
     public void CheckShipDamaged(sVector2 pt)
     {
-        for (SHIP i = 0; i < SHIP.WAR_SHIP; i++)
+        for (SHIP i = 0; i <= SHIP.WAR_SHIP; i++)
         {
             if (getCurPlayer().m_InstalledShipMap[i].DamagedBattleChest(pt))
             {
                 break;
             }
-
         }
 
     }
+
+
+    public bool IsShipAllDie()
+    {
+      return  getCurPlayer().IsShipAllDie();
+    }
+
+    public void AllClearPlayerInfo()
+    {
+
+        getCurPlayer().ResetShip();
+        m_isPlayerConnected = false;
+        m_isEnemyPlayerConnected = false;
+        m_PlayerNum = 0;
+        m_PlayerID = -1;
+        m_PlayerEnemyID = -1;
+        m_PlayerTable.Clear();
+
+
+
+    }
+
 
 }

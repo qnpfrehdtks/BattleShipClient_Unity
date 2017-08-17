@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public enum SKILL
 {
     BASE,
-    REPAIR,
+    DEFEND,
     RADER,
     SUPER_BOMB
     
@@ -15,6 +15,9 @@ public enum SKILL
 
 public class Skill_Icon : MonoBehaviour {
 
+    public PlayTurn m_PlaySkill;
+
+    public GameObject m_Info;
    public int m_Range;
    public ATTKSHAPE m_Shape;
    public SKILL m_Skill;
@@ -26,9 +29,13 @@ public class Skill_Icon : MonoBehaviour {
    private int m_SkillCurNum;
    public int m_SkillMaxNum;
 
+    public bool m_isSelected { get; private set; }
+
     void Start()
     {
-        m_SkillCurNum = m_SkillMaxNum;
+        m_isSelected = false;
+        m_Info.SetActive(false);
+           m_SkillCurNum = m_SkillMaxNum;
         m_SkillX.gameObject.SetActive(false);
 
         if (m_Skill != SKILL.BASE)
@@ -36,20 +43,56 @@ public class Skill_Icon : MonoBehaviour {
         else m_SkillNumTXT.text = "∞";
     }
     
+
     public void ClickSkill()
     {
-        if(m_SkillCurNum > 0)
+        ////if(!BattleManager.Instance.IsCanClickSkill())
+        ////{
+        ////    return;
+        ////}
+
+
+        if (m_SkillCurNum > 0 )
         {
-            UpdateSkillState();
-            NetworkManager.Instance.m_SelectedSkill = m_Skill;
-            BattleManager.Instance.ClickSkill(this);
-      
+            SoundManager.Instance.playSoundOnseShot("ClickSkill");
+            if (m_isSelected)
+            {
+                UnSelectSkill();
+                m_PlaySkill.unSelectSkill();
+            }
+            else
+            {
+                SelectSkill();
+            }
         }
+
     }
+
+
+    public void SelectSkill()
+    { 
+            m_isSelected = true;
+            m_Button.image.color = Color.grey;
+            m_Info.SetActive(true);
+            m_PlaySkill.SelectSkill(this);
+           
+    }
+
+    public void UnSelectSkill()
+    {
+            m_isSelected = false;
+            m_Button.image.color = Color.white;
+            m_Info.SetActive(false);
+           // m_PlaySkill.unSelectSkill();
+    }
+
+
 
     public void SkillOn()
     {
         BattleManager.Instance.AttackBlock(m_Range, m_Shape, m_Skill);
+        UpdateSkillState();
+        UnSelectSkill();
     }
 
     private void UpdateSkillState()

@@ -87,7 +87,7 @@ public class BattleCtrl : SceneCtrl
         UIPanel_Ready.m_isClickUp = false;
         NetworkManager.Instance.sendPacketState(PACKETSTATE.PK_BATTLE_START);
         PlayerManager.Instance.CreatePlayerCaptain();
-        SoundManager.Instance.PlayBGM("Battle");
+        SoundManager.Instance.PlayBGM("Battle2");
 
 
         return true;

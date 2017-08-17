@@ -25,7 +25,7 @@ public enum SELECT_BUTTON_STATE
 public class ShipSelectButton : MonoBehaviour {
 
     public GameObject m_Go;
-    public GameObject m_Info;
+//    public GameObject m_Info;
 
     private bool m_isDrag;
     public Base_Ship m_ShipObject { get; set; }
@@ -51,7 +51,7 @@ public class ShipSelectButton : MonoBehaviour {
         m_StateInfo.text = "DISPATCHED";
         m_StateInfo.color = Color.yellow;
 
-        m_Info.SetActive(false);
+     //   m_Info.SetActive(false);
     }
 
 
@@ -64,7 +64,7 @@ public class ShipSelectButton : MonoBehaviour {
         m_StateInfo.text = "SELECT";
         m_StateInfo.color = Color.green;
         
-        m_Info.SetActive(false);
+     //   m_Info.SetActive(false);
     }
 
     void SelectButton()
@@ -77,7 +77,7 @@ public class ShipSelectButton : MonoBehaviour {
         m_StateInfo.text = "SELECTED";
         m_StateInfo.color = Color.blue;
         
-        m_Info.SetActive(true);
+     //   m_Info.SetActive(true);
     }
 
 

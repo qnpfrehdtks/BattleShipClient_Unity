@@ -168,6 +168,7 @@ public class UIPanel_Ready : SingletonUIPanel<UIPanel_Ready>
 
         if (PlayerManager.Instance.CheckDispatchedShipCount(true) >= 5)
         {
+            SoundManager.Instance.playSoundOnseShot("OK");
             m_isWait = true;
             m_WaitPanel.SetActive(true);
             NetworkManager.Instance.sendPacketState(PACKETSTATE.PK_PLAYER_READY);
@@ -175,7 +176,14 @@ public class UIPanel_Ready : SingletonUIPanel<UIPanel_Ready>
         }
         else
         {
+            SoundManager.Instance.playSoundOnseShot("FAIL");
             m_ToBattleButton.SetActive(true);
         }
+    }
+
+
+    public void ClickBackToReady()
+    {
+        m_ToBattleButton.SetActive(false);
     }
 }

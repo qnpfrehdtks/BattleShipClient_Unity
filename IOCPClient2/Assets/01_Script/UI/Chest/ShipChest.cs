@@ -30,7 +30,13 @@ public class ShipChest : Chest {
 
     }
 
-
+    public virtual void AllClearReset()
+    {
+        m_isCheckOnce = false;
+        m_isCanInstalled = true;
+        m_isDamaged = false;
+        ChangeState(CHEST_STATE.ORIGIN);
+    }
 
     public void DamageBlock()
     {

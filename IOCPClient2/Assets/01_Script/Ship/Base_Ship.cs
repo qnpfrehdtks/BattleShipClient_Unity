@@ -24,9 +24,9 @@ public class Base_Ship : MonoBehaviour {
     public string m_ShipName;
     // Use this for initialization
     void Awake () {
-
+        gameObject.SetActive(true);
         DontDestroyOnLoad(gameObject);
-
+        m_Postion = transform.position;
         m_isDead = false;
         m_isInstalled = false;
         m_isCanInstall = true;
@@ -35,16 +35,28 @@ public class Base_Ship : MonoBehaviour {
 
         for (int i=0; i < shipChests.Length; i++)
         {
-
-            m_ShipChestList.Add(shipChests[i]);
+           m_ShipChestList.Add(shipChests[i]);
         }
-
+       
         m_ChestSize = m_ShipChestList.Count;
-
-    
-
+        m_Life = m_ChestSize;
     }
 	
+
+    public void Reset()
+    {
+        m_Postion = transform.position;
+        m_isDead = false;
+        m_isInstalled = false;
+        m_isCanInstall = true;
+        m_ShipChestList.Clear();
+        m_ChestSize = 0;
+        m_Life = 0;
+        gameObject.SetActive(false);
+
+    }
+
+
 	// Update is called once per frame
 	void Update () {
         if (m_isDrag)
@@ -229,5 +241,15 @@ public class Base_Ship : MonoBehaviour {
 
         return false;
     }
+
+
+    public void AllClear()
+    {
+        for(int i=0; i < m_ShipChestList.Count; i++)
+        {
+
+        }
+    }
+
 
 }

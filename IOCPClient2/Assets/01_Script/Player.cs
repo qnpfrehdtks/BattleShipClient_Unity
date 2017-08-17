@@ -54,6 +54,18 @@ public class Player : MonoBehaviour  {
         }
     }
 
+    public void ResetShip()
+    {
+        for(SHIP i =0; i <= SHIP.WAR_SHIP; i++)
+        {
+            m_InstalledShipMap[i].Reset();
+        }
+
+        m_InstalledShipMap.Clear();
+
+    }
+
+
 
     public int ShipCount()
     {
@@ -72,7 +84,7 @@ public class Player : MonoBehaviour  {
     {
         int count = 0;
 
-        for(SHIP i=0; i < SHIP.WAR_SHIP; i++)
+        for(SHIP i=0; i <= SHIP.WAR_SHIP; i++)
         {
             for (int j = 0; j < pos.Length; j++)
             {
@@ -87,6 +99,23 @@ public class Player : MonoBehaviour  {
         return count;
     }
 
+
+    public bool IsShipAllDie()
+    {
+        bool isAllDead = true; 
+
+        for (SHIP i = 0; i <= SHIP.WAR_SHIP; i++)
+        {
+            if(!m_InstalledShipMap[i].m_isDead)
+            {
+                isAllDead = false;
+            }
+
+        }
+
+        return isAllDead;
+
+    }
 
 
 

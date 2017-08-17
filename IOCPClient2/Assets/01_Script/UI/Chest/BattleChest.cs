@@ -36,6 +36,9 @@ public class BattleChest : Chest {
     {
         if (BattleManager.Instance.m_whoTurn == PLAYER.MINE)
         {
+            SoundManager.Instance.playSoundOnseShot("ClickBlock");
+
+
             if (!m_isSelected)
             {
                 BattleManager.Instance.SelectAttackPt(this);
@@ -44,7 +47,7 @@ public class BattleChest : Chest {
             else if (m_isSelected)
             {
                 BattleManager.Instance.UnSelectedAttackPt(this);
-                UIPanel_Battle.instance.UnSelectedAttackPt(this);
+                UIPanel_Battle.instance.UnSelectedAttackPt();
             }
         }
     //   BattleManager.Instance.baseAttackBlock(this);

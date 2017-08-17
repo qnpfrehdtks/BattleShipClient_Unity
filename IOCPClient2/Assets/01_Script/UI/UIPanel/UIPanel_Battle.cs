@@ -6,6 +6,11 @@ using UnityEngine.UI;
 public class UIPanel_Battle : SingletonUIPanel<UIPanel_Battle>
 {
 
+    public BattleInfo m_ComboInfo;
+    public BattleInfo m_BattleInfo;
+    public BattleInfo m_TurnInfo;
+    public BattleInfo m_BattleResultInfo;
+
     public List<RaderRotate> m_RaderResultList;
     public List<GameObject> m_RaderTXTList;
 
@@ -13,17 +18,17 @@ public class UIPanel_Battle : SingletonUIPanel<UIPanel_Battle>
     public GameObject m_TargetPositionImage;
     public GameObject m_RaderTargetPositionImage;
     public Text m_RaderTxt;
-
+    public Text m_BattleTXT;
 
     private int ComboGage;
 
-    public Text m_Combo;
-    public Text m_Info;
     public Color m_InfoColor;
     public Vector3 m_OriginCameraPos;
     public Battle_CameraMove m_CameraMove;
 
-  
+    // Particle Bomb;
+    public GameObject m_SuperBombEffect;
+    private ParticleSystem m_SuperBombParticle;
 
     // Particle Bomb;
     public GameObject m_BombEffect;
@@ -53,7 +58,6 @@ public class UIPanel_Battle : SingletonUIPanel<UIPanel_Battle>
 
     public GameObject m_PlayerCaptain;
 
-    public Text m_Turntext;
 
     // 칸 리스트 담음.
     public List<BattleChest> m_EnemyChestList;
@@ -62,11 +66,8 @@ public class UIPanel_Battle : SingletonUIPanel<UIPanel_Battle>
     // Use this for initialization
     void Start () {
 
-        m_InfoColor = m_Info.color;
+        m_InfoColor = new Color(1, 0.8f, 0);
         m_Canvas =  GameObject.Find("Canvas");
-
-        m_Info.text = " ";
-        m_Combo.text = " ";
 
         ComboGage = 0;
 
@@ -118,27 +119,27 @@ public class UIPanel_Battle : SingletonUIPanel<UIPanel_Battle>
 
         PlayerManager.Instance.CheckShipPos();
 
+
+        // 일반 폭발 이펙트 조정
         m_BombParticle = m_BombEffect.GetComponent<ParticleSystem>();
         m_BombParticle.Stop();
+       
         var main = m_BombParticle.main;
         main.loop = false;
 
+        // 슈퍼 폭발 이펙트 조정
+        m_SuperBombParticle = m_SuperBombEffect.GetComponent<ParticleSystem>();
+        m_SuperBombParticle.Stop();
+
+        main = m_SuperBombParticle.main;
+        main.loop = false;
+
+
+        //  물 이펙트 조정
 
         m_WaterParticle = m_WaterEffect.GetComponent<ParticleSystem>();
         m_WaterParticle.Stop();
-
-        //      GameStart(PACKETSTATE.PK_BATTLE_START);
-
-        //     m_CameraMove.setMoveLerpToPos(m_EnemyCameraPos.transform.position, 1.0f);
-        // m_CameraMove.setMoveLerpToPos(m_EnemyCameraPos.transform.position, 1.0f);
-        //  Base_Ship ship = m_Ship1.GetComponent<Base_Ship>();
-        //   ship =  PlayerManager.Instance.getCurPlayer().m_InstalledShipMap[SHIP.PT_BOAT];
-
-        //    m_TargetPositionImage = Instantiate(m_TargetPositionImage, new Vector3(100, 100, 100), Quaternion.identity);
-        ////   Debug.Log(PlayerManager.Instance.getCurPlayer().m_InstalledShipMap.Count);
-
-
-        ////  ship.SetPositon();
+        m_WaterEffect.gameObject.SetActive(false);
 
     }
 
@@ -146,6 +147,8 @@ public class UIPanel_Battle : SingletonUIPanel<UIPanel_Battle>
     public void UI_TurnUpdate(PLAYER state)
     {
         m_CameraMove = Camera.main.gameObject.GetComponent<Battle_CameraMove>();
+       SoundManager.Instance.playSoundOnseShot("UseSkill");
+        
 
         if (state == PLAYER.MINE)
         {
@@ -160,33 +163,31 @@ public class UIPanel_Battle : SingletonUIPanel<UIPanel_Battle>
 
     private void UI_ourTurnUpdate( )
     {
-        m_Turntext.text = "PLAYER TURN";
-        m_Turntext.color = Color.green;
+        m_TurnInfo.SetText("PLAYER TURN", UI_ANIMATION.DOWNNER,new Color(0.35f,0,1.0f));
         m_CameraMove.setMoveLerpToPos(m_EnemyCameraPos.transform.position, 5.0f);
         SetActiveAllRaderTXT(true);
-
     }
 
     private void UI_oppoTurnUpdate()
     {
-        m_Info.text = " ";
-        m_Combo.text = " ";
-        m_Turntext.text = "ENEMY TURN";
-        m_Turntext.color = Color.red;
+        m_TurnInfo.SetText("ENEMY TURN", UI_ANIMATION.DOWNNER, Color.red);
         m_CameraMove.setMoveLerpToPos(m_PlayerCameraPos.transform.position, 5.0f);
         SetActiveAllRaderTXT(false);
     }
 
 
-    public void DamagedFromEnemy(sVector2[] pos)
+    public void DamagedFromEnemy(sVector2[] pos, SKILL skill)
     {
-        SoundManager.Instance.playSoundOnseShot("BOMB");
+       if(skill == SKILL.SUPER_BOMB)
+        {
+            SoundManager.Instance.playSoundOnseShot("BOMB");
+        }
 
         for (int i = 0; i < pos.Length; i++)
         {
+        
             BattleChest temp = m_ChestList[pos[i].x + pos[i].y * 10];
-            StartCoroutine(BombEffect(temp.transform.position));
-          
+           
             // 적이 명중을 못한 경우
             if (temp.m_isCanInstalled)
             {
@@ -195,6 +196,7 @@ public class UIPanel_Battle : SingletonUIPanel<UIPanel_Battle>
             // 명중한 경우
             else if (!temp.m_isCanInstalled)
             {
+                StartCoroutine(SuperBombEffect(temp.transform.position));
                 temp.ChangeState(CHEST_STATE.RED);
                 PlayerManager.Instance.CheckShipDamaged(pos[i]);
                 FireCreate(temp.transform.position);
@@ -221,14 +223,12 @@ public class UIPanel_Battle : SingletonUIPanel<UIPanel_Battle>
         // 명중한 경우
         else if (!temp.m_isCanInstalled)
         {
-
             StartCoroutine(BombEffect(temp.transform.position));
             temp.ChangeState(CHEST_STATE.RED);
             AttackSuccessText();
             PlayerManager.Instance.CheckShipDamaged(pos);
             FireCreate(temp.transform.position);
 
-         
             return true;
         }
 
@@ -249,20 +249,15 @@ public class UIPanel_Battle : SingletonUIPanel<UIPanel_Battle>
         // 명중한 경우
         if (state == PACKETSTATE.PK_PLAYER_DAMAGESUCC)
         {
-
             StartCoroutine(BombEffect(temp.transform.position));
             temp.ChangeState(CHEST_STATE.RED);
             AttackSuccessText();
-          //  temp.ShipChestCheck();
-        
         }  // 명중 못한 경우
         else if (state == PACKETSTATE.PK_PLAYER_DAMAGEFAIL)
         {
-
             StartCoroutine(WaterEffect(temp.transform.position));
             temp.ChangeState(CHEST_STATE.BLUE);
             AttackFailText();
-
         }
 
         return temp;
@@ -270,13 +265,11 @@ public class UIPanel_Battle : SingletonUIPanel<UIPanel_Battle>
 
 
 
-
-
     public void DamageToEnemy(sVector2 DamagedPos, SKILL state)
     {
-          BattleChest temp = m_EnemyChestList[DamagedPos.x + DamagedPos.y * 10];
-          StartCoroutine(BombEffect(temp.transform.position));
-          temp.ChangeState(CHEST_STATE.RED);
+        BattleChest temp = m_EnemyChestList[DamagedPos.x + DamagedPos.y * 10];
+        StartCoroutine(SuperBombEffect(temp.transform.position));
+        temp.ChangeState(CHEST_STATE.RED);
       
     }
 
@@ -291,13 +284,30 @@ public class UIPanel_Battle : SingletonUIPanel<UIPanel_Battle>
     public IEnumerator BombEffect(Vector3 pos)
     {
         m_BombEffect.gameObject.SetActive(true);
-        pos.y = 3.0f;
+
+        Vector3 vec = pos;
+        vec.y = 3.0f;
+        m_BombEffect.transform.position = vec;
         m_BombParticle.Emit(1);
-        m_BombEffect.transform.position = pos;
 
         yield return new WaitForSeconds(1.0f);
 
+
         m_BombEffect.gameObject.SetActive(false);
+    }
+
+    public IEnumerator SuperBombEffect(Vector3 pos)
+    {
+        Vector3 vec = pos;
+        vec.y = 3.0f;
+        GameObject newEffect = Instantiate(m_SuperBombEffect, vec, Quaternion.identity);
+        ParticleSystem newSystem = newEffect.GetComponent<ParticleSystem>();
+        newSystem.Emit(1);
+
+        yield return new WaitForSeconds(1.0f);
+
+
+        Destroy(newEffect);
     }
 
     public IEnumerator WaterEffect(Vector3 pos)
@@ -323,14 +333,12 @@ public class UIPanel_Battle : SingletonUIPanel<UIPanel_Battle>
     {
         if (BattleManager.Instance.m_whoTurn == PLAYER.MINE)
         {
-            m_Info.text = "AttackSuccess!!";
-            m_Info.color = m_InfoColor;
+            m_BattleInfo.SetText("AttackSuccess!!", UI_ANIMATION.DOWNNER, m_InfoColor);
             ComboUpdate();
         }
         else if (BattleManager.Instance.m_whoTurn == PLAYER.OPPONENT)
         {
-            m_Info.text = "DAMAGED!!";
-            m_Info.color = m_InfoColor;
+            m_BattleInfo.SetText("DAMAGED!!", UI_ANIMATION.SHAKE, m_InfoColor);
             ComboUpdate();
         }
     }
@@ -339,76 +347,100 @@ public class UIPanel_Battle : SingletonUIPanel<UIPanel_Battle>
     {
         if (BattleManager.Instance.m_whoTurn == PLAYER.MINE)
         {
-            m_Info.text = "AttackFAIL!!";
-            m_Info.color = m_InfoColor;
+            m_BattleInfo.SetText("AttackFAIL!!", UI_ANIMATION.SHAKE, m_InfoColor);
             ComboFail();
         }
         else if (BattleManager.Instance.m_whoTurn == PLAYER.OPPONENT)
         {
-            m_Info.text = "Enemy's Attack Fail!!";
-            m_Info.color = m_InfoColor;
+            m_BattleInfo.SetText("Enemy's Attack Fail!!", UI_ANIMATION.SHAKE, m_InfoColor);
             ComboFail();
         }
     }
 
-
-    public void SkillResult()
+    public void SkillResultInfo( )
     {
-        StartCoroutine(SkillResultInfo());
+  
+        if (BattleManager.Instance.m_whoTurn == PLAYER.OPPONENT)
+        {
+            SoundManager.Instance.playSoundOnseShot("UseSkill");
+            m_BattleInfo.SetText("Enemy used a Skill!!", UI_ANIMATION.UPPER, m_InfoColor);
+        }
+
+        m_BattleInfo.reSetText(4.0f);
 
     }
 
     public int RaderResult(int count)
     {
-        StartCoroutine(RaderResultInfo(count));
-
-        return count;
-    }
-
-    private IEnumerator SkillResultInfo( )
-    {
-        if (BattleManager.Instance.m_whoTurn == PLAYER.MINE)
-        {
-            SoundManager.Instance.playSoundOnseShot("Rader");
-            m_Info.text = "Detected Enemy !!";
-            m_Info.color = m_InfoColor;
-        }
-        else if (BattleManager.Instance.m_whoTurn == PLAYER.OPPONENT)
-        {
-            SoundManager.Instance.playSoundOnseShot("FAIL");
-            m_Info.text = " Enemy used a Skill!! ";
-            m_Info.color = m_InfoColor;
-        }
-
-        yield return new WaitForSeconds(4.0f);
-
-        m_Info.text = " ";
-
-    }
-
-    private IEnumerator RaderResultInfo(int count)
-    {
         if (BattleManager.Instance.m_whoTurn == PLAYER.MINE)
         {
             DrawTextRaderReult(count);
             SoundManager.Instance.playSoundOnseShot("Rader");
-            m_Info.text = "Detected Enemy " + count + "!!";
-            m_Info.color = m_InfoColor;
+
+            m_BattleInfo.SetText("Detected Enemy " + count + "!!", UI_ANIMATION.UPPER, m_InfoColor);
+
             SetActiveAllRaderTXT(true);
         }
         else if (BattleManager.Instance.m_whoTurn == PLAYER.OPPONENT)
         {
-            SoundManager.Instance.playSoundOnseShot("FAIL");
-            m_Info.text = " Enemy used a Skill!! ";
-            m_Info.color = m_InfoColor;
+
+            if (!BattleManager.Instance.m_isDefendMode)
+            {
+                SoundManager.Instance.playSoundOnseShot("UseSkill");
+                m_BattleInfo.SetText("Enemy used a Skill!!", UI_ANIMATION.UPPER, m_InfoColor);
+            }
+            else
+            {
+                SoundManager.Instance.playSoundOnseShot("DefendFail");
+                m_BattleInfo.SetText("Defend Fail", UI_ANIMATION.SHAKE, m_InfoColor);
+            }
         }
 
-        yield return new WaitForSeconds(4.0f);
 
-        m_Info.text = " ";
+        m_BattleInfo.reSetText(4.0f);
+
+        return count;
        
     }
 
+    public void DefendResult()
+    {
+  
+
+        if (BattleManager.Instance.m_whoTurn == PLAYER.MINE)
+        {
+            SoundManager.Instance.playSoundOnseShot("AttackBlock");
+
+            m_BattleInfo.SetText(" Enemy block Attack!!", UI_ANIMATION.SHAKE, m_InfoColor);
+
+            SetActiveAllRaderTXT(true);
+        }
+        else if (BattleManager.Instance.m_whoTurn == PLAYER.OPPONENT)
+        {
+            SoundManager.Instance.playSoundOnseShot("DefendSuccess");
+            m_BattleInfo.SetText(" Defend Success!! ", UI_ANIMATION.DOWNNER, m_InfoColor);
+        }
+
+        m_BattleInfo.reSetText(4.0f);
+    }
+
+
+    public void DefendFailResult()
+    {
+        if (BattleManager.Instance.m_whoTurn == PLAYER.MINE)
+        {
+            SoundManager.Instance.playSoundOnseShot("AttackBlock");
+            m_BattleInfo.SetText(" Defend Attack Once!! ", UI_ANIMATION.UPPER, m_InfoColor);
+        }
+        else if (BattleManager.Instance.m_whoTurn == PLAYER.OPPONENT)
+        {
+            SoundManager.Instance.playSoundOnseShot("DefendFail");
+            m_BattleInfo.SetText(" Defend Fail!! ", UI_ANIMATION.SHAKE, m_InfoColor);
+        }
+        
+        m_BattleInfo.reSetText(4.0f);
+
+    }
 
     private void DrawTextRaderReult(int count)
     {
@@ -429,50 +461,31 @@ public class UIPanel_Battle : SingletonUIPanel<UIPanel_Battle>
         }
     }
 
-
-    public void TileSelectCaution()
+    public void SelectCaution(string Str)
     {
-        StartCoroutine(SelectTileCaution());
+        SoundManager.Instance.playSoundOnseShot("DefendFail");
+        m_BattleInfo.SetText(Str, UI_ANIMATION.SHAKE, Color.red);
+        m_BattleInfo.reSetText(4.0f);
     }
 
-
-
-    private IEnumerator SelectTileCaution()
-    {
-         m_Info.text = "Please Select a Block";
-        m_Info.color = Color.red;
-
-        yield return new WaitForSeconds(2.0f);
-
-        m_Info.text = " ";
-    }
 
     private void ComboUpdate()
     {
         ComboGage++;
-        m_Combo.text = "COMBO " + ComboGage + "!!";
-
+        m_ComboInfo.SetText("COMBO " + ComboGage + "!!", UI_ANIMATION.DOWNNER, Color.red);
     }
 
     private void ComboFail()
     {
         ComboGage = 0;
-        m_Combo.text = " ";
+        m_ComboInfo.reSetText(0.0f);
     }
-
-    public void resetInfotxt()
-    {
-        m_Info.text = " ";
-    }
-
 
     public void SelectRaderPt(BattleChest block)
     {
         GameObject raderGO = Instantiate<GameObject>(m_RaderTargetPositionImage);
         raderGO.transform.position = block.transform.position;
         m_RaderResultList.Add(raderGO.GetComponent<RaderRotate>());
-
-
     }
 
     public void SelectAttackPt(BattleChest block)
@@ -480,11 +493,22 @@ public class UIPanel_Battle : SingletonUIPanel<UIPanel_Battle>
         m_TargetPositionImage.transform.position = block.transform.position;
     }
 
-    public void UnSelectedAttackPt(BattleChest block)
-    {
+    public void UnSelectedAttackPt()
+    { 
         m_TargetPositionImage.transform.position = new Vector3(100, 100, 100);
     }
 
-
-
+    public void BattleResult(PLAYER victoryPlayer)
+    {
+        if(victoryPlayer == PLAYER.MINE)
+        {
+            m_BattleResultInfo.SetText("VICTORY!!", UI_ANIMATION.UP_DOWN, new Color(0.5f,1,0));
+            SoundManager.Instance.playSoundOnseShot("Victory");
+        }
+        else if (victoryPlayer == PLAYER.OPPONENT)
+        {
+            SoundManager.Instance.playSoundOnseShot("Defeat");
+            m_BattleResultInfo.SetText("DEFEAT!!", UI_ANIMATION.UP_DOWN, Color.red);
+        }
+    }
 }

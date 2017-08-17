@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class SoundManager : Singleton_Manager<SoundManager>
 {
-
     AudioSource audioSource;
     Dictionary<string, AudioClip> BGMTable;
     Dictionary<string, AudioClip> audioTable;
