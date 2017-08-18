@@ -88,6 +88,7 @@
     <Compile Include="Assets\01_Script\CameraFadeInOut.cs" />
     <Compile Include="Assets\01_Script\FactoryInterface.cs" />
     <Compile Include="Assets\01_Script\Manger\BattleManager.cs" />
+    <Compile Include="Assets\01_Script\Manger\EffectControll.cs" />
     <Compile Include="Assets\01_Script\Manger\GameManager.cs" />
     <Compile Include="Assets\01_Script\Manger\LoginManager.cs" />
     <Compile Include="Assets\01_Script\Manger\NetworkManager.cs" />
@@ -107,6 +108,7 @@
     <Compile Include="Assets\01_Script\UI\Chest\Chest.cs" />
     <Compile Include="Assets\01_Script\UI\Chest\ReadyChest.cs" />
     <Compile Include="Assets\01_Script\UI\Chest\ShipChest.cs" />
+    <Compile Include="Assets\01_Script\UI\Effect.cs" />
     <Compile Include="Assets\01_Script\UI\InstallIconButton.cs" />
     <Compile Include="Assets\01_Script\UI\RaderRotate.cs" />
     <Compile Include="Assets\01_Script\UI\Ready_BackToReady.cs" />

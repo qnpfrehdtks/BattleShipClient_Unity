@@ -249,8 +249,10 @@ public class NetworkManager : Singleton_Manager<NetworkManager>
                         if (!PlayerManager.Instance.IsShipAllDie())
                             sendPacketState(PACKETSTATE.PK_TURN_CHECK);
                         else
+                        {
+                            BattleManager.Instance.BattleResult(PLAYER.OPPONENT);
                             sendPacketState(PACKETSTATE.PK_PLAYER_DIE);
-
+                        }
                     }
                     else if (p.PkKey == (int)PACKETSTATE.PK_ENEMY_SKILLATTACK)
                     {
@@ -419,7 +421,7 @@ public class NetworkManager : Singleton_Manager<NetworkManager>
                 }
                 else if (p.PkKey == (int)PACKETSTATE.PK_ENEMY_DIE)
                 {
-                    BattleManager.Instance.BattleResult();
+                    BattleManager.Instance.BattleResult(PLAYER.MINE);
                     m_se.resetIOStream();
                 }
                 // 서버가 아직 적이 공격 받을 준비를 못해다고 기다리레요.
@@ -491,7 +493,7 @@ public class NetworkManager : Singleton_Manager<NetworkManager>
                 }
                 else if ( p.PkKey == (int)PACKETSTATE.PK_ENEMY_DIE )
                 {
-                    BattleManager.Instance.BattleResult();
+                    BattleManager.Instance.BattleResult(PLAYER.MINE);
                     m_se.resetIOStream();
                 }
 
@@ -569,7 +571,7 @@ public class NetworkManager : Singleton_Manager<NetworkManager>
                 }
                 else if (p.PkKey == (int)PACKETSTATE.PK_ENEMY_DIE)
                 {
-                    BattleManager.Instance.BattleResult();
+                    BattleManager.Instance.BattleResult(PLAYER.MINE);
                     m_se.resetIOStream();
                 }
                 break;
@@ -822,7 +824,7 @@ public class NetworkManager : Singleton_Manager<NetworkManager>
                 else
                 {
                     sendPacketState(PACKETSTATE.PK_PLAYER_DIE);
-                    BattleManager.Instance.BattleResult();
+                    BattleManager.Instance.BattleResult(PLAYER.OPPONENT);
                 }
                 break;
             case SKILL.DEFEND:
@@ -841,7 +843,7 @@ public class NetworkManager : Singleton_Manager<NetworkManager>
        
         if (state == PACKETSTATE.PK_ENEMY_EXIT)
         {
-            BattleManager.Instance.ForcedVictory();
+            BattleManager.Instance.BattleResult(PLAYER.MINE);
             m_se.resetIOStream();
             return true;
         }
@@ -852,9 +854,9 @@ public class NetworkManager : Singleton_Manager<NetworkManager>
      private IEnumerator ForcedVictoryForTime(float second)
     {
         yield return new WaitForSeconds(second);
-        BattleManager.Instance.ForcedVictory();
+        BattleManager.Instance.BattleResult(PLAYER.MINE);
 
-       
+
     } 
 
 

@@ -91,8 +91,9 @@ public class Skill_Icon : MonoBehaviour {
     public void SkillOn()
     {
         BattleManager.Instance.AttackBlock(m_Range, m_Shape, m_Skill);
-        UpdateSkillState();
         UnSelectSkill();
+        UpdateSkillState();
+        
     }
 
     private void UpdateSkillState()
@@ -107,7 +108,6 @@ public class Skill_Icon : MonoBehaviour {
                 m_SkillNumTXT.color = Color.red;
 
                 m_SkillX.gameObject.SetActive(true);
-
                 m_Button.image.color = Color.grey;
                 m_Button.transition = Selectable.Transition.None;
             }

@@ -14,8 +14,8 @@ public class UIPanel_Wait : SingletonUIPanel<UIPanel_Wait>
        
         tr = Logo.GetComponent<RectTransform>();
 
-        if (NetworkManager.Instance.m_isConnectServer)
-            m_isServerClosedWin.SetActive(true);
+        //if (NetworkManager.Instance.m_isConnectServer)
+        //    m_isServerClosedWin.SetActive(true);
     }
 	
 	// Update is called once per frame

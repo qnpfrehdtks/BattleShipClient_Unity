@@ -25,7 +25,7 @@ public class BattleInfo : MonoBehaviour {
 
 
 	// Use this for initialization
-	void Start ()
+	void Awake ()
     {
         m_Text = GetComponent<Text>();
 
@@ -42,6 +42,7 @@ public class BattleInfo : MonoBehaviour {
 
 
         m_Text.color = color;
+       
         PlayAnimation(AnimationPlay, Time);
         m_Text.text = Info;
     }

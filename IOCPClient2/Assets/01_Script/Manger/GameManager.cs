@@ -24,6 +24,7 @@ public class GameManager : MonoBehaviour {
         PlayerManager.createManager();
         BattleManager.createManager();
         SoundManager.createManager();
+        EffectController.createManager();
 
     }
 
